@@ -14,16 +14,23 @@ use Spatie\Permission\PermissionRegistrar;
  */
 final class PermissionTeamScope
 {
+    /** The explicitly-pinned team, or null when in auto-resolve mode. */
+    private static int|string|null $current = null;
+
     public static function for(int $organizationId, callable $callback): mixed
     {
         $registrar = app(PermissionRegistrar::class);
-        $previous = $registrar->getPermissionsTeamId();
+        $previous = self::$current;
 
+        self::$current = $organizationId;
         $registrar->setPermissionsTeamId($organizationId);
 
         try {
             return $callback();
         } finally {
+            // Restore the parent scope's pin, or null to return to AUTO mode
+            // (resolve from tenant()/auth) — never leave a stale explicit team.
+            self::$current = $previous;
             $registrar->setPermissionsTeamId($previous);
         }
     }

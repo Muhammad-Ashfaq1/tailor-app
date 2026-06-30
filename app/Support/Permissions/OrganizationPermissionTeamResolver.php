@@ -21,8 +21,11 @@ final class OrganizationPermissionTeamResolver implements PermissionsTeamResolve
 {
     private int|string|null $teamId = null;
 
-    private bool $explicitlySet = false;
-
+    /**
+     * Setting an explicit id pins the team; setting null returns to AUTO mode
+     * (resolve from tenant()/auth). PermissionTeamScope relies on this null =
+     * auto contract so it can cleanly restore after a scoped block.
+     */
     public function setPermissionsTeamId(int|string|Model|null $id): void
     {
         if ($id instanceof Model) {
@@ -30,12 +33,11 @@ final class OrganizationPermissionTeamResolver implements PermissionsTeamResolve
         }
 
         $this->teamId = $id;
-        $this->explicitlySet = true;
     }
 
     public function getPermissionsTeamId(): int|string|null
     {
-        if ($this->explicitlySet) {
+        if ($this->teamId !== null) {
             return $this->teamId;
         }
 
