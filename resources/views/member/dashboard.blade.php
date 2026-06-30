@@ -4,37 +4,12 @@
 @section('page-title', 'Dashboard')
 
 @section('content')
-    <div class="row g-4 mb-4">
-        <div class="col-sm-6 col-xl-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-label-primary rounded p-2 me-2"><i class="icon-base ti tabler-checklist"></i></span>
-                        <span class="text-muted">My tasks</span>
-                    </div>
-                    <h3 class="mb-0">{{ number_format($totalTasks) }}</h3>
-                </div>
-            </div>
-        </div>
-        @foreach ($byStatus as $status)
-            <div class="col-sm-6 col-xl-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-label-{{ $status['color'] }} rounded p-2 me-2"><i class="icon-base ti tabler-point"></i></span>
-                            <span class="text-muted">{{ $status['label'] }}</span>
-                        </div>
-                        <h3 class="mb-0">{{ number_format($status['count']) }}</h3>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-
     <div class="card">
         <div class="card-body">
-            <a href="{{ route('member.tasks.index') }}" class="btn btn-primary">
-                <i class="icon-base ti tabler-arrow-right me-1"></i> Go to my tasks
+            <h5 class="mb-1">Welcome back, {{ $user->name }} 👋</h5>
+            <p class="text-muted mb-3">Use the menu to access your reports.</p>
+            <a href="{{ route('member.reports.index') }}" class="btn btn-primary">
+                <i class="icon-base ti tabler-chart-bar me-1"></i> View reports
             </a>
         </div>
     </div>
