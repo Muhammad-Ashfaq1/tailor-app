@@ -9,8 +9,6 @@ use App\Enums\OrganizationStatus;
 use App\Models\Customer;
 use App\Models\Lead;
 use App\Models\Organization;
-use App\Models\Project;
-use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -30,22 +28,13 @@ class DemoOrganizationSeeder extends Seeder
         app(ProvisionOrganizationRoles::class)->handle($organization->id);
 
         // Tenant users.
-        $admin = $this->user($organization, 'Acme Admin', 'admin@acme.test', User::ROLE_TENANT_ADMIN);
+        $this->user($organization, 'Acme Admin', 'admin@acme.test', User::ROLE_TENANT_ADMIN);
         $this->user($organization, 'Morgan Manager', 'manager@acme.test', User::ROLE_MANAGER);
-        $lead = $this->user($organization, 'Lee Lead', 'lead@acme.test', User::ROLE_MEMBER_LEAD);
-        $member = $this->user($organization, 'Casey Member', 'member@acme.test', User::ROLE_MEMBER);
+        $this->user($organization, 'Lee Lead', 'lead@acme.test', User::ROLE_MEMBER_LEAD);
+        $this->user($organization, 'Casey Member', 'member@acme.test', User::ROLE_MEMBER);
 
         // Org-scoped data — initialize tenancy so org_id auto-fills.
         tenancy()->initialize($organization);
-
-        $assignees = [$admin->id, $lead->id, $member->id];
-
-        Project::factory()->count(5)->create()->each(function (Project $project) use ($assignees): void {
-            Task::factory()->count(random_int(3, 7))->create([
-                'project_id' => $project->id,
-                'assigned_to' => $assignees[array_rand($assignees)],
-            ]);
-        });
 
         // Demo API customers (org-scoped).
         if (class_exists(Customer::class)) {

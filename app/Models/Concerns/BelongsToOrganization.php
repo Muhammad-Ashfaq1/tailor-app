@@ -67,7 +67,7 @@ trait BelongsToOrganization
     }
 
     /**
-     * Org-scope route-model binding so /tenant/projects/{project} can never
+     * Org-scope route-model binding so /tenant/{resource}/{model} can never
      * resolve a record belonging to another organization.
      */
     public function resolveRouteBindingQuery($query, $value, $field = null)

@@ -12,9 +12,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Stateless API identity for the /api/v1/* customer surface. Org-scoped exactly
- * like Project/Task: once tenancy is initialised, queries auto-scope to the
- * current organization via the BelongsToOrganization global scope.
+ * Stateless API identity for the /api/v1/* customer surface. Org-scoped: once
+ * tenancy is initialised, queries auto-scope to the current organization via
+ * the BelongsToOrganization global scope.
  *
  * @property int $id
  * @property int $organization_id
