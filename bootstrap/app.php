@@ -34,6 +34,18 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Tenancy MUST be initialised before route-model binding runs, since
+        // binding is an org-scoped query. Place org.init / customer.org.init
+        // immediately after session auth and before SubstituteBindings.
+        $middleware->appendToPriorityList(
+            \Illuminate\Contracts\Session\Middleware\AuthenticatesSessions::class,
+            InitializeTenancyFromAuthenticatedUser::class,
+        );
+        $middleware->appendToPriorityList(
+            InitializeTenancyFromAuthenticatedUser::class,
+            InitializeTenancyFromCustomer::class,
+        );
+
         $middleware->alias([
             // Custom tenancy / panel guards.
             'active.user' => EnsureUserIsActive::class,
