@@ -20,7 +20,7 @@ self.addEventListener('activate', (event) => {
 });
 
 function isStaticAsset(url) {
-    return url.pathname.startsWith('/vuexy/') || url.pathname.startsWith('/build/');
+    return url.pathname.startsWith('/organization/') || url.pathname.startsWith('/build/');
 }
 
 self.addEventListener('fetch', (event) => {

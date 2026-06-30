@@ -8,7 +8,7 @@
     "theme_color": "#7367f0",
     "icons": [
         {
-            "src": "/vuexy/img/favicon/favicon.ico",
+            "src": "/organization/img/favicon/favicon.ico",
             "sizes": "64x64 32x32 24x24 16x16",
             "type": "image/x-icon"
         }

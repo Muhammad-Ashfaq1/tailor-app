@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light-style layout-menu-fixed layout-compact"
-      dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('vuexy/') }}/" data-template="vertical-menu-template-free">
+      dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('organization/') }}/" data-template="vertical-menu-template-free">
 <head>
     @include('layouts.partials.head')
 </head>

@@ -50,7 +50,8 @@
         .landing-alert--error { background: #fdeaea; color: #c0392b; }
     </style>
 
-    @vite(['resources/js/app.js'])
+    <script src="{{ asset('organization/libs/axios/axios.min.js') }}"></script>
+    <script src="{{ asset('organization/js/app.js') }}"></script>
 </head>
 <body class="page-landing">
     <header class="landing-container">
