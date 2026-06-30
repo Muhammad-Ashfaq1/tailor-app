@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
  */
 abstract class ReportDefinition
 {
-    /** Stable key used in the URL (e.g. "projects"). */
+    /** Stable key used in the URL (e.g. "invoices"). */
     abstract public function key(): string;
 
     /** Human label shown in the UI. */

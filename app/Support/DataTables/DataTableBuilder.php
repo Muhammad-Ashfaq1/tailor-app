@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
  *   return DataTableBuilder::for($query, $request)
  *       ->searchable(['name', 'slug'])
  *       ->orderable(['id', 'name', 'created_at'])
- *       ->map(fn (Project $p) => ['id' => $p->id, 'name' => $p->name, ...])
+ *       ->map(fn ($row) => ['id' => $row->id, 'name' => $row->name, ...])
  *       ->toArray();
  */
 final class DataTableBuilder

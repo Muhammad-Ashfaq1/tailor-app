@@ -7,7 +7,6 @@ namespace Tests\Feature;
 use App\Actions\Organizations\ProvisionOrganizationRoles;
 use App\Enums\OrganizationStatus;
 use App\Models\Organization;
-use App\Models\Project;
 use App\Models\User;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RolePermissionSeeder;
@@ -55,8 +54,6 @@ class TenantSmokeTest extends TestCase
 
         foreach ([
             '/tenant/dashboard',
-            '/tenant/projects',
-            '/tenant/tasks',
             '/tenant/members',
             '/tenant/roles',
             '/tenant/settings',
@@ -66,30 +63,18 @@ class TenantSmokeTest extends TestCase
         }
     }
 
-    public function test_project_save_is_org_scoped_and_audited(): void
+    public function test_member_listing_is_org_scoped(): void
     {
-        $admin = $this->tenantAdmin();
-
-        $this->actingAs($admin)
-            ->post('/tenant/projects/save', ['name' => 'Launch Site', 'status' => 'active'])
-            ->assertOk()
-            ->assertJsonStructure(['message', 'project' => ['id', 'name']]);
-
-        $project = Project::withoutOrganizationScope()->firstWhere('name', 'Launch Site');
-        $this->assertSame($admin->organization_id, $project->organization_id);
-        $this->assertSame($admin->id, $project->created_by);
-        $this->assertSame('launch-site', $project->slug);
-    }
-
-    public function test_cross_tenant_route_binding_is_blocked(): void
-    {
+        // A member that belongs to org A.
         $adminA = $this->tenantAdmin();
-        $this->actingAs($adminA)->post('/tenant/projects/save', ['name' => 'A Secret', 'status' => 'active']);
-        $projectA = Project::withoutOrganizationScope()->firstWhere('name', 'A Secret');
+        $secretEmail = $adminA->email;
 
+        // Org B admin must never see org A's users in the members listing.
         $adminB = $this->tenantAdmin();
-        // Org B admin cannot resolve org A's project (org-scoped route binding -> 404).
-        $this->actingAs($adminB)->get("/tenant/projects/{$projectA->slug}")->assertNotFound();
+        $this->actingAs($adminB)
+            ->getJson('/tenant/members/listing?draw=1&start=0&length=50')
+            ->assertOk()
+            ->assertJsonMissing(['email' => $secretEmail]);
     }
 
     public function test_pending_org_cannot_log_in(): void
@@ -109,8 +94,7 @@ class TenantSmokeTest extends TestCase
         $member = User::factory()->forOrganization($org, User::ROLE_MEMBER)->create();
         $member->assignPrimaryRole(User::ROLE_MEMBER);
 
-        // Members have no projects.create permission -> 403 from route middleware.
-        $this->actingAs($member)->post('/tenant/projects/save', ['name' => 'Nope', 'status' => 'active'])
-            ->assertForbidden();
+        // Plain members have no members.view permission -> 403 from route middleware.
+        $this->actingAs($member)->get('/tenant/members')->assertForbidden();
     }
 }

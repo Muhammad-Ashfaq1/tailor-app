@@ -22,7 +22,7 @@ class ApiAndSurfacesTest extends TestCase {
         $m=User::factory()->forOrganization($o,'member')->create();
         $m->assignPrimaryRole('member');
         $this->actingAs($m)->get('/member/dashboard')->assertOk();
-        $this->actingAs($m)->get('/member/tasks')->assertOk();
+        $this->actingAs($m)->get('/member/reports')->assertOk();
     }
     public function test_api_login_and_scoped_access(): void {
         $o=Organization::factory()->create(['status'=>'approved','slug'=>'acme-api']);
@@ -31,7 +31,6 @@ class ApiAndSurfacesTest extends TestCase {
         $resp->assertOk()->assertJsonStructure(['token']);
         $token=$resp->json('token');
         $this->withToken($token)->getJson('/api/v1/me')->assertOk();
-        $this->withToken($token)->getJson('/api/v1/projects')->assertOk();
     }
     public function test_api_login_rejects_unapproved_org(): void {
         $o=Organization::factory()->create(['status'=>'pending','slug'=>'pend-api']);

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'The platform for modern teams')
-@section('meta-description', 'Run projects, tasks and your whole team on one multi-tenant platform built for modern businesses.')
+@section('meta-description', 'Run your whole team on one secure, multi-tenant platform built for modern businesses.')
 
 @php
     $features = [
@@ -10,8 +10,8 @@
             'body' => 'Each organization gets an isolated, secure workspace. Your data never leaks across tenants.',
         ],
         [
-            'title' => 'Projects & tasks',
-            'body' => 'Plan work, assign owners and track status from a single, fast dashboard your team will actually use.',
+            'title' => 'Built for your workflow',
+            'body' => 'Add the modules your business needs and track everything from a single, fast dashboard your team will actually use.',
         ],
         [
             'title' => 'Roles that fit',
@@ -36,7 +36,7 @@
     <section class="landing-hero">
         <div class="landing-container">
             <h1>Run your whole team on one platform</h1>
-            <p>Projects, tasks and people — organized in a secure, multi-tenant workspace built for modern businesses.</p>
+            <p>Your team and your data — organized in a secure, multi-tenant workspace built for modern businesses.</p>
             <div>
                 <a href="{{ route('register') }}" class="landing-btn landing-btn--primary">Get started</a>
                 <a href="#" class="landing-btn landing-btn--ghost" data-open-demo>Request a demo</a>
