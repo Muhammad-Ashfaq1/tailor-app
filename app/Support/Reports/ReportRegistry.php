@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Support\Reports;
 
-use App\Reports\ProjectsReport;
-use App\Reports\TasksReport;
-
 /**
  * Static catalogue of available reports. Adding a report is a one-line change:
  * register its key => DefinitionClass here. No service provider required.
@@ -15,8 +12,7 @@ final class ReportRegistry
 {
     /** @var array<string, class-string<ReportDefinition>> */
     private static array $map = [
-        'projects' => ProjectsReport::class,
-        'tasks' => TasksReport::class,
+        // Register reports here, e.g. 'invoices' => InvoicesReport::class
     ];
 
     /**

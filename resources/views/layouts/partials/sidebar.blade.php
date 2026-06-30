@@ -42,22 +42,6 @@
                     <div>Dashboard</div>
                 </a>
             </li>
-            @can('projects.view')
-                <li class="menu-item {{ request()->routeIs('tenant.projects.*') ? 'active' : '' }}">
-                    <a href="{{ route('tenant.projects.index') }}" class="menu-link">
-                        <i class="menu-icon icon-base ti tabler-folders"></i>
-                        <div>Projects</div>
-                    </a>
-                </li>
-            @endcan
-            @can('tasks.view')
-                <li class="menu-item {{ request()->routeIs('tenant.tasks.*') ? 'active' : '' }}">
-                    <a href="{{ route('tenant.tasks.index') }}" class="menu-link">
-                        <i class="menu-icon icon-base ti tabler-checklist"></i>
-                        <div>Tasks</div>
-                    </a>
-                </li>
-            @endcan
             @can('members.view')
                 <li class="menu-item {{ request()->routeIs('tenant.members.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.members.index') }}" class="menu-link">

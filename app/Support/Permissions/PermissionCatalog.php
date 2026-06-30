@@ -21,8 +21,6 @@ final class PermissionCatalog
      */
     private const RESOURCES = [
         // Tenant resources.
-        'projects' => ['view', 'create', 'update', 'delete'],
-        'tasks' => ['view', 'create', 'update', 'delete'],
         'members' => ['view', 'create', 'update', 'delete', 'impersonate'],
         'roles' => ['view'],
         'settings' => [],
@@ -59,22 +57,16 @@ final class PermissionCatalog
     {
         return [
             User::ROLE_TENANT_ADMIN => self::expand([
-                'projects' => '*', 'tasks' => '*', 'members' => '*',
-                'roles' => '*', 'settings' => '*', 'reports' => '*',
+                'members' => '*', 'roles' => '*', 'settings' => '*', 'reports' => '*',
             ]),
             User::ROLE_MANAGER => [
-                'projects.view', 'projects.create', 'projects.update',
-                'tasks.view', 'tasks.create', 'tasks.update', 'tasks.delete',
                 'members.view',
                 'reports.view',
             ],
             User::ROLE_MEMBER_LEAD => [
-                'projects.view',
-                'tasks.view', 'tasks.create', 'tasks.update',
                 'reports.view',
             ],
             User::ROLE_MEMBER => [
-                'tasks.view', 'tasks.update',
                 'reports.view',
             ],
         ];

@@ -21,11 +21,6 @@
                             <i class="menu-icon icon-base ti tabler-smart-home"></i><div>Dashboard</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('member.tasks.*') ? 'active' : '' }}">
-                        <a href="{{ route('member.tasks.index') }}" class="menu-link">
-                            <i class="menu-icon icon-base ti tabler-checklist"></i><div>My Tasks</div>
-                        </a>
-                    </li>
                     <li class="menu-item {{ request()->routeIs('member.reports.*') ? 'active' : '' }}">
                         <a href="{{ route('member.reports.index') }}" class="menu-link">
                             <i class="menu-icon icon-base ti tabler-chart-bar"></i><div>Reports</div>

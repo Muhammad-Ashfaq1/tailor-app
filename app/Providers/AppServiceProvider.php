@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Repositories\Interface\LeadRepositoryInterface;
-use App\Repositories\Interface\ProjectRepositoryInterface;
-use App\Repositories\Interface\TaskRepositoryInterface;
 use App\Repositories\LeadRepository;
-use App\Repositories\ProjectRepository;
-use App\Repositories\TaskRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,8 +18,6 @@ class AppServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     private array $repositories = [
-        ProjectRepositoryInterface::class => ProjectRepository::class,
-        TaskRepositoryInterface::class => TaskRepository::class,
         LeadRepositoryInterface::class => LeadRepository::class,
     ];
 
