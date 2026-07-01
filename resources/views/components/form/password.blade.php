@@ -17,12 +17,13 @@
     'field' => null,
     'wrapper' => 'mb-3',
     'feedback' => true,
+    'requiredMark' => false,
 ])
 @php($id ??= $name)
 @php($field ??= $name)
 <div class="{{ $wrapper }}">
     @if ($label !== null)
-        <label class="form-label" for="{{ $id }}">{{ $label }}@isset($hint) {{ $hint }}@endisset</label>
+        <label class="form-label" for="{{ $id }}">{{ $label }}{!! $requiredMark ? ' <span class="text-danger">*</span>' : '' !!}@isset($hint) {{ $hint }}@endisset</label>
     @endif
     <div class="input-group input-group-merge{{ $feedback ? ' has-validation' : '' }}">
         <input type="password" id="{{ $id }}" name="{{ $name }}" autocomplete="new-password" {{ $attributes->class('form-control') }}>

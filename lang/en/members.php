@@ -17,5 +17,10 @@ return [
     'password_required_hint' => '(required)',
     'password_keep_hint' => '(leave blank to keep)',
     'impersonate' => 'Impersonate',
+
+    // Input placeholders
+    'ph_name' => 'e.g. Ahmed Ali',
+    'ph_email' => 'name@example.com',
+
     'empty' => 'No members yet.',
 ];

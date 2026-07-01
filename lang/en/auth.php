@@ -62,4 +62,10 @@ return [
     'verify_lead_after' => 'Click it to confirm your address. Your organization will be reviewed for approval.',
     'resend_verification' => 'Resend verification email',
     'sign_out' => 'Sign out',
+
+    // Input placeholders
+    'ph_email' => 'name@example.com',
+    'ph_password' => '••••••••',
+    'ph_name' => 'e.g. Ahmed Ali',
+    'ph_org_name' => 'e.g. Elegance Tailors',
 ];

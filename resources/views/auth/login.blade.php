@@ -11,7 +11,7 @@
         <div class="mb-3">
             <label class="form-label" for="email">{{ __('auth.email_address') }}</label>
             <input type="email" class="form-control @error('email') is-invalid @enderror"
-                   id="email" name="email" value="{{ old('email') }}" autofocus>
+                   id="email" name="email" value="{{ old('email') }}" placeholder="{{ __('auth.ph_email') }}" autofocus>
             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
@@ -20,7 +20,7 @@
                 <a href="{{ route('password.request') }}"><small>{{ __('auth.forgot_password') }}</small></a>
             </div>
             <div class="input-group input-group-merge has-validation">
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="{{ __('auth.ph_password') }}">
                 <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
                 @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>

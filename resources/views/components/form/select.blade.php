@@ -15,12 +15,13 @@
     'label' => null,
     'field' => null,
     'wrapper' => 'mb-3',
+    'requiredMark' => false,
 ])
 @php($id ??= $name)
 @php($field ??= $name)
 <div class="{{ $wrapper }}">
     @if ($label !== null)
-        <label class="form-label" for="{{ $id }}">{{ $label }}@isset($hint) {{ $hint }}@endisset</label>
+        <label class="form-label" for="{{ $id }}">{{ $label }}{!! $requiredMark ? ' <span class="text-danger">*</span>' : '' !!}@isset($hint) {{ $hint }}@endisset</label>
     @endif
     <select id="{{ $id }}" name="{{ $name }}" {{ $attributes->class('form-select') }}>{{ $slot }}</select>
     <div class="invalid-feedback" data-field="{{ $field }}"></div>

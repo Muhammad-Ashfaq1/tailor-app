@@ -13,6 +13,7 @@ return [
     'created' => 'Created',
     'impersonate_admin' => 'Impersonate admin',
     'update_failed' => 'Could not update',
+    'ph_name' => 'e.g. Elegance Tailors',
 
     // Enum labels (App\Enums\OrganizationStatus) — values stay English.
     'status' => [

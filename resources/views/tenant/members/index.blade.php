@@ -33,8 +33,8 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="member-id">
-                    <x-form.input name="name" id="member-name" :label="__('members.name')" required />
-                    <x-form.input name="email" id="member-email" type="email" :label="__('members.email')" required />
+                    <x-form.input name="name" id="member-name" :label="__('members.name')" :placeholder="__('members.ph_name')" required />
+                    <x-form.input name="email" id="member-email" type="email" :label="__('members.email')" :placeholder="__('members.ph_email')" required />
                     <x-form.select name="role" id="member-role" :label="__('members.role')">
                         @foreach ($roles as $role)
                             <option value="{{ $role }}">{{ Str::headline($role) }}</option>

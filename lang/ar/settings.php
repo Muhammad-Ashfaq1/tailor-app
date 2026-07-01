@@ -91,6 +91,8 @@ return [
     'loyalty_help' => 'مكافأة الرصيد الافتراضية المطبّقة على العملاء الجدد (قابلة للتعديل لكل عميل).',
     'save_settings' => 'حفظ الإعدادات',
     'website_url_placeholder' => 'https://…',
+    'business_email_placeholder' => 'name@example.com',
+    'business_phone_placeholder' => '05XXXXXXXX',
     'stitching_type_placeholder' => 'مثال: سعودي',
     'footer_notes_placeholder' => 'يظهر في أسفل كل فاتورة…',
 

@@ -17,5 +17,10 @@ return [
     'password_required_hint' => '(مطلوب)',
     'password_keep_hint' => '(اتركه فارغًا للإبقاء عليه)',
     'impersonate' => 'انتحال الدخول',
+
+    // Input placeholders
+    'ph_name' => 'مثال: أحمد علي',
+    'ph_email' => 'name@example.com',
+
     'empty' => 'لا يوجد أعضاء بعد.',
 ];

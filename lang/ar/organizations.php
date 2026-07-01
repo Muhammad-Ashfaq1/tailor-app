@@ -13,6 +13,7 @@ return [
     'created' => 'تاريخ الإنشاء',
     'impersonate_admin' => 'انتحال دخول المدير',
     'update_failed' => 'تعذّر التحديث',
+    'ph_name' => 'مثال: خياط الأناقة',
 
     // Enum labels (App\Enums\OrganizationStatus) — values stay English.
     'status' => [

@@ -91,6 +91,8 @@ return [
     'loyalty_help' => 'Default credit reward applied to new customers (editable per customer).',
     'save_settings' => 'Save Settings',
     'website_url_placeholder' => 'https://…',
+    'business_email_placeholder' => 'name@example.com',
+    'business_phone_placeholder' => '05XXXXXXXX',
     'stitching_type_placeholder' => 'e.g. Saudi',
     'footer_notes_placeholder' => 'Shown at the bottom of every invoice…',
 

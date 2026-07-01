@@ -18,25 +18,16 @@
         <div class="card-body">
             <form id="report-filters" class="row g-3 align-items-end">
                 @if ($definition->dateColumn() !== null)
-                    <div class="col-sm-6 col-md-3">
-                        <label class="form-label" for="date_from">{{ __('reports.from_date') }}</label>
-                        <input type="date" class="form-control" id="date_from" name="date_from">
-                    </div>
-                    <div class="col-sm-6 col-md-3">
-                        <label class="form-label" for="date_to">{{ __('reports.to_date') }}</label>
-                        <input type="date" class="form-control" id="date_to" name="date_to">
-                    </div>
+                    <x-form.input name="date_from" type="date" :label="__('reports.from_date')" wrapper="col-sm-6 col-md-3" />
+                    <x-form.input name="date_to" type="date" :label="__('reports.to_date')" wrapper="col-sm-6 col-md-3" />
                 @endif
                 @if ($statusFilter)
-                    <div class="col-sm-6 col-md-3">
-                        <label class="form-label" for="status">{{ $statusFilter['label'] }}</label>
-                        <select class="form-select" id="status" name="status">
-                            <option value="">{{ __('app.all') }}</option>
-                            @foreach ($statusFilter['options'] as $option)
-                                <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <x-form.select name="status" :label="$statusFilter['label']" wrapper="col-sm-6 col-md-3">
+                        <option value="">{{ __('app.all') }}</option>
+                        @foreach ($statusFilter['options'] as $option)
+                            <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                        @endforeach
+                    </x-form.select>
                 @endif
                 <div class="col-sm-6 col-md-3 d-flex gap-2">
                     <button type="submit" class="btn btn-primary"><i class="icon-base ti tabler-filter me-1"></i> {{ __('reports.apply') }}</button>

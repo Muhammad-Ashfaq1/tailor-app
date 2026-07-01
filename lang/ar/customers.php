@@ -33,6 +33,11 @@ return [
     'active' => 'نشط',
     'inactive' => 'غير نشط',
 
+    // Input placeholders
+    'ph_name' => 'مثال: أحمد علي',
+    'ph_phone' => '05XXXXXXXX',
+    'ph_email' => 'name@example.com',
+
     'empty' => 'لا يوجد عملاء بعد.',
 
     // Enum labels (App\Enums\CustomerType) — values stay English.

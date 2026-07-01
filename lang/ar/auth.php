@@ -62,4 +62,10 @@ return [
     'verify_lead_after' => 'اضغط عليه لتأكيد عنوانك. ستتم مراجعة منشأتك للاعتماد.',
     'resend_verification' => 'إعادة إرسال بريد التأكيد',
     'sign_out' => 'تسجيل الخروج',
+
+    // Input placeholders
+    'ph_email' => 'name@example.com',
+    'ph_password' => '••••••••',
+    'ph_name' => 'مثال: أحمد علي',
+    'ph_org_name' => 'مثال: خياط الأناقة',
 ];

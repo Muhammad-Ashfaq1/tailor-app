@@ -56,20 +56,12 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="default_credit_type">{{ __('settings.default_credit_type') }} <span class="text-danger">*</span></label>
-                <select class="form-select" id="default_credit_type" name="default_credit_type">
-                    @foreach ($creditTypes as $value => $label)
-                        <option value="{{ $value }}" @selected($loyalty['default_credit_type'] === $value)>{{ $label }}</option>
-                    @endforeach
-                </select>
-                <div class="invalid-feedback" data-field="default_credit_type"></div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="default_credit_value">{{ __('settings.default_credit_value') }}</label>
-                <input type="number" step="0.01" min="0" class="form-control" id="default_credit_value" name="default_credit_value" value="{{ $loyalty['default_credit_value'] }}">
-                <div class="invalid-feedback" data-field="default_credit_value"></div>
-            </div>
+            <x-form.select name="default_credit_type" :label="__('settings.default_credit_type')" wrapper="col-md-6 mb-3" required-mark>
+                @foreach ($creditTypes as $value => $label)
+                    <option value="{{ $value }}" @selected($loyalty['default_credit_type'] === $value)>{{ $label }}</option>
+                @endforeach
+            </x-form.select>
+            <x-form.input name="default_credit_value" type="number" :label="__('settings.default_credit_value')" wrapper="col-md-6 mb-3" step="0.01" min="0" value="{{ $loyalty['default_credit_value'] }}" />
         </div>
     </div>
     <div class="card-footer text-end"><button type="submit" class="btn btn-primary">{{ __('settings.save_settings') }}</button></div>

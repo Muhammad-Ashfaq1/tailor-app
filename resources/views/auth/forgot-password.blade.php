@@ -11,7 +11,7 @@
         <div class="mb-3">
             <label class="form-label" for="email">{{ __('auth.email_address') }}</label>
             <input type="email" class="form-control @error('email') is-invalid @enderror"
-                   id="email" name="email" value="{{ old('email') }}" autofocus>
+                   id="email" name="email" value="{{ old('email') }}" placeholder="{{ __('auth.ph_email') }}" autofocus>
             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
         <button type="submit" class="btn btn-primary d-grid w-100 mb-3">{{ __('auth.send_reset_link_button') }}</button>

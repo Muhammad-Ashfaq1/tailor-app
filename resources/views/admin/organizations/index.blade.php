@@ -30,7 +30,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="org-id">
-                    <x-form.input name="name" id="org-name" :label="__('organizations.name')" required />
+                    <x-form.input name="name" id="org-name" :label="__('organizations.name')" :placeholder="__('organizations.ph_name')" required />
                     <x-form.select name="status" id="org-status" :label="__('organizations.status_label')">
                         @foreach ($statuses as $status)
                             <option value="{{ $status['value'] }}">{{ $status['label'] }}</option>

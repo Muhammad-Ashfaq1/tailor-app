@@ -15,14 +15,15 @@
     'id' => null,
     'label' => null,
     'type' => 'text',
-    'field' => null,      // data-field for inline validation (defaults to name)
-    'wrapper' => 'mb-3',  // outer column / spacing classes
+    'field' => null,        // data-field for inline validation (defaults to name)
+    'wrapper' => 'mb-3',    // outer column / spacing classes
+    'requiredMark' => false, // show a red * on the label (visual only)
 ])
 @php($id ??= $name)
 @php($field ??= $name)
 <div class="{{ $wrapper }}">
     @if ($label !== null)
-        <label class="form-label" for="{{ $id }}">{{ $label }}@isset($hint) {{ $hint }}@endisset</label>
+        <label class="form-label" for="{{ $id }}">{{ $label }}{!! $requiredMark ? ' <span class="text-danger">*</span>' : '' !!}@isset($hint) {{ $hint }}@endisset</label>
     @endif
     <input type="{{ $type }}" id="{{ $id }}" name="{{ $name }}" {{ $attributes->class('form-control') }}>
     {{ $slot }}

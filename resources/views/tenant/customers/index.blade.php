@@ -28,8 +28,8 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="customer-id">
                     <div class="row">
-                        <x-form.input name="name" id="customer-name" :label="__('customers.name')" wrapper="col-md-6 mb-3" required />
-                        <x-form.input name="phone" id="customer-phone" :label="__('customers.phone')" wrapper="col-md-6 mb-3" />
+                        <x-form.input name="name" id="customer-name" :label="__('customers.name')" :placeholder="__('customers.ph_name')" wrapper="col-md-6 mb-3" required />
+                        <x-form.input name="phone" id="customer-phone" :label="__('customers.phone')" :placeholder="__('customers.ph_phone')" wrapper="col-md-6 mb-3" />
                     </div>
                     <div class="row">
                         <x-form.select name="type" id="customer-type" :label="__('customers.type')" wrapper="col-md-6 mb-3">
@@ -37,7 +37,7 @@
                                 <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
                             @endforeach
                         </x-form.select>
-                        <x-form.input name="email" id="customer-email" type="email" :label="__('customers.email')" wrapper="col-md-6 mb-3">
+                        <x-form.input name="email" id="customer-email" type="email" :label="__('customers.email')" :placeholder="__('customers.ph_email')" wrapper="col-md-6 mb-3">
                             <x-slot:hint><small class="text-muted">{{ __('customers.email_hint') }}</small></x-slot:hint>
                         </x-form.input>
                     </div>
