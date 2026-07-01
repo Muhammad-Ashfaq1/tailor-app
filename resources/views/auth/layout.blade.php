@@ -12,9 +12,12 @@
     <link rel="stylesheet" href="{{ asset('organization/css/demo.css') }}">
     <link rel="stylesheet" href="{{ asset('organization/vendor/css/pages/page-auth.css') }}">
     <link rel="stylesheet" href="{{ asset('organization/vendor/libs/notyf/notyf.css') }}">
+    <link rel="stylesheet" href="{{ asset('organization/vendor/libs/pickr/pickr-themes.css') }}">
     <script src="{{ asset('organization/libs/axios/axios.min.js') }}"></script>
     <script src="{{ asset('organization/js/app.js') }}"></script>
     <script src="{{ asset('organization/vendor/js/helpers.js') }}"></script>
+    {{-- Theme customizer keeps the login theme in sync (panel hidden via customizer-hide). --}}
+    <script src="{{ asset('organization/vendor/js/template-customizer.js') }}"></script>
     <script src="{{ asset('organization/js/config.js') }}"></script>
 </head>
 <body>
@@ -40,6 +43,7 @@
     <script src="{{ asset('organization/vendor/libs/jquery/jquery.js') }}"></script>
     <script src="{{ asset('organization/vendor/libs/popper/popper.js') }}"></script>
     <script src="{{ asset('organization/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('organization/vendor/libs/pickr/pickr.js') }}"></script>
     <script src="{{ asset('organization/vendor/libs/notyf/notyf.js') }}"></script>
     <script src="{{ asset('organization/js/main.js') }}"></script>
     @stack('scripts')

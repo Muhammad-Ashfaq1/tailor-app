@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="{{ asset('organization/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
 {{-- Notyf toast notifications (global — used via window.notyf). --}}
 <link rel="stylesheet" href="{{ asset('organization/vendor/libs/notyf/notyf.css') }}">
+{{-- Pickr — colour picker used by the theme customizer. --}}
+<link rel="stylesheet" href="{{ asset('organization/vendor/libs/pickr/pickr-themes.css') }}">
 
 @stack('vendor-styles')
 @stack('styles')
@@ -27,4 +29,6 @@
 <script src="{{ asset('organization/js/app.js') }}"></script>
 
 <script src="{{ asset('organization/vendor/js/helpers.js') }}"></script>
+{{-- Theme customizer (skin / theme / colour). Must load after helpers.js, before config.js. --}}
+<script src="{{ asset('organization/vendor/js/template-customizer.js') }}"></script>
 <script src="{{ asset('organization/js/config.js') }}"></script>
