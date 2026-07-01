@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\CustomerRepository;
+use App\Repositories\Interface\CustomerRepositoryInterface;
 use App\Repositories\Interface\LeadRepositoryInterface;
 use App\Repositories\LeadRepository;
 use Illuminate\Support\Facades\Blade;
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     private array $repositories = [
         LeadRepositoryInterface::class => LeadRepository::class,
+        CustomerRepositoryInterface::class => CustomerRepository::class,
     ];
 
     public function register(): void

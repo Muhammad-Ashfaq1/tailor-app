@@ -7,7 +7,6 @@
 
 @push('vendor-styles')
     <link rel="stylesheet" href="{{ asset('organization/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('organization/vendor/libs/sweetalert2/sweetalert2.css') }}">
 @endpush
 
 @section('content')
@@ -56,12 +55,18 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="member-password">Password <small class="text-muted" id="pw-hint"></small></label>
-                            <input type="password" class="form-control" id="member-password" name="password">
-                            <div class="invalid-feedback" data-field="password"></div>
+                            <div class="input-group input-group-merge has-validation">
+                                <input type="password" class="form-control" id="member-password" name="password">
+                                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
+                                <div class="invalid-feedback" data-field="password"></div>
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="member-password2">Confirm</label>
-                            <input type="password" class="form-control" id="member-password2" name="password_confirmation">
+                            <div class="input-group input-group-merge">
+                                <input type="password" class="form-control" id="member-password2" name="password_confirmation">
+                                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
+                            </div>
                         </div>
                     </div>
                     <input type="hidden" name="is_active" value="0">
@@ -81,7 +86,6 @@
 
 @push('vendor-scripts')
     <script src="{{ asset('organization/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('organization/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
 @endpush
 
 @push('scripts')
@@ -144,7 +148,7 @@
         clearErrors();
         axios.post(urls.save, Object.fromEntries(new FormData(form))).then(({ data }) => {
             modal.hide(); table.ajax.reload(null, false);
-            Swal.fire({ icon: 'success', title: data.message, timer: 1400, showConfirmButton: false });
+            notyf.success(data.message);
         }).catch(err => {
             if (err.response && err.response.status === 422) {
                 const errors = err.response.data.errors || {};
@@ -154,7 +158,7 @@
                     if (input) input.classList.add('is-invalid');
                     if (fb) fb.textContent = errors[f][0];
                 });
-            } else { Swal.fire({ icon: 'error', title: 'Something went wrong' }); }
+            } else { notyf.failure('Something went wrong'); }
         });
     });
 

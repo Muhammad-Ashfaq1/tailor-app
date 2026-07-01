@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Tenant\CustomerController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\RoleController;
@@ -30,6 +31,15 @@ Route::middleware(['web', 'auth', 'active.user', 'org.init', 'org.approved', 'im
             Route::get('/listing', 'listing')->middleware('permission:members.view')->name('listing');
             Route::post('/save', 'save')->middleware('permission:members.create|members.update')->name('save');
             Route::post('/{user}/impersonate', 'impersonate')->middleware('permission:members.impersonate')->name('impersonate');
+        });
+
+        // Shop customers (walk-in / regular) management.
+        Route::controller(CustomerController::class)->prefix('customers')->name('customers.')->group(function (): void {
+            Route::get('/', 'index')->middleware('permission:customers.view')->name('index');
+            Route::get('/listing', 'listing')->middleware('permission:customers.view')->name('listing');
+            Route::get('/{id}', 'show')->middleware('permission:customers.view')->name('show')->whereNumber('id');
+            Route::post('/save', 'save')->middleware('permission:customers.create|customers.update')->name('save');
+            Route::delete('/{id}', 'destroy')->middleware('permission:customers.delete')->name('destroy')->whereNumber('id');
         });
 
         // Roles & permissions UI.

@@ -19,8 +19,11 @@
                 <label class="form-label" for="password">Password</label>
                 <a href="{{ route('password.request') }}"><small>Forgot password?</small></a>
             </div>
-            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
-            @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            <div class="input-group input-group-merge has-validation">
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
+                @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
         </div>
         <div class="mb-3">
             <div class="form-check">

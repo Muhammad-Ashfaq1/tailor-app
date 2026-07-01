@@ -17,12 +17,18 @@
         </div>
         <div class="mb-3">
             <label class="form-label" for="password">New password</label>
-            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
-            @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            <div class="input-group input-group-merge has-validation">
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
+                @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="password_confirmation">Confirm password</label>
-            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+            <div class="input-group input-group-merge">
+                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
+            </div>
         </div>
         <button type="submit" class="btn btn-primary d-grid w-100">Set new password</button>
     </form>

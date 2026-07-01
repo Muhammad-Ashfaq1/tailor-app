@@ -9,13 +9,20 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-final readonly class LoginController extends Controller
+/**
+ * Session auth for the web panels: show the login form, log in (with the
+ * layered credential/status gates) and log out. Password reset lives in
+ * PasswordResetController; registration/verification/impersonation each keep
+ * their own controller.
+ */
+final readonly class AuthController extends Controller
 {
-    public function show(): View
+    public function showLogin(): View
     {
         return view('auth.login');
     }
@@ -23,9 +30,10 @@ final readonly class LoginController extends Controller
     /**
      * Layered login: credentials -> email verified -> org status -> active flag.
      * Each gate has its own message via resolveLoginBlockMessage(). Throttle is
-     * applied at the route (5,1).
+     * applied at the route (5,1). On success the user lands on the dashboard for
+     * their role tier (super-admin / tenant / member).
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
         $user = User::query()->where('email', $request->string('email'))->first();
 
@@ -45,7 +53,18 @@ final readonly class LoginController extends Controller
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        return redirect()->intended(route($user->defaultDashboardRouteName()));
+        return redirect()->intended(route($user->defaultDashboardRouteName()))
+            ->with('status', "Welcome back, {$user->name}!");
+    }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 
     /** Returns the first applicable block reason, or null if login may proceed. */

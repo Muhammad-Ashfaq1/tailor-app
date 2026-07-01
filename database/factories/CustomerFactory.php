@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\CustomerCreditType;
+use App\Enums\CustomerType;
 use App\Models\Customer;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,9 +25,19 @@ class CustomerFactory extends Factory
      */
     public function definition(): array
     {
+        $creditType = fake()->randomElement(CustomerCreditType::cases());
+
         return [
             'organization_id' => null,
             'name' => fake()->name(),
+            'phone' => fake()->numerify('05########'),
+            'address' => fake()->optional()->address(),
+            'type' => fake()->randomElement(CustomerType::cases()),
+            'credit_type' => $creditType,
+            'credit_value' => $creditType === CustomerCreditType::None
+                ? 0
+                : ($creditType === CustomerCreditType::Percentage ? fake()->numberBetween(2, 10) : fake()->numberBetween(10, 100)),
+            'notes' => fake()->optional()->sentence(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'is_active' => true,

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ImpersonationController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +23,8 @@ Route::middleware('web')->group(function (): void {
         Route::post('/register', [RegisterController::class, 'store'])
             ->middleware('throttle:5,1')->name('register.store');
 
-        Route::get('/login', [LoginController::class, 'show'])->name('login');
-        Route::post('/login', [LoginController::class, 'store'])
+        Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])
             ->middleware('throttle:5,1')->name('login.store');
 
         // Password reset.
@@ -45,7 +44,7 @@ Route::middleware('web')->group(function (): void {
         Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
             ->middleware('throttle:6,1')->name('verification.send');
 
-        Route::post('/logout', LogoutController::class)->name('logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
         // Stop impersonating — single shared handler (super->tenant, tenant->member).
         Route::post('/impersonate/stop', [ImpersonationController::class, 'stop'])

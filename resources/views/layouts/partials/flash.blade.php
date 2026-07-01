@@ -1,22 +1,29 @@
-@if (session('status'))
-    <div class="alert alert-success alert-dismissible" role="alert">
-        {{ session('status') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
-@if (session('error'))
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
-@if ($errors->any())
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+{{--
+    Server-side flash + validation messages, surfaced as global notyf toasts
+    (Notyf, with an alert() fallback — see public/organization/js/app.js).
+    Included by every layout (app / member-portal / auth), so `status`,
+    `error` and validation errors (e.g. invalid login credentials) all render
+    consistently across the whole application.
+--}}
+@php
+    $flashSuccess = session('status');
+    $flashError = session('error');
+    $flashErrors = $errors->all();
+@endphp
+
+@if ($flashSuccess || $flashError || count($flashErrors) > 0)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!window.notyf) { return; }
+            @if ($flashSuccess)
+                window.notyf.success(@json($flashSuccess));
+            @endif
+            @if ($flashError)
+                window.notyf.failure(@json($flashError));
+            @endif
+            @foreach ($flashErrors as $error)
+                window.notyf.failure(@json($error));
             @endforeach
-        </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+        });
+    </script>
 @endif

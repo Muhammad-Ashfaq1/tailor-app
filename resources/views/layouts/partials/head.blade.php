@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="{{ asset('organization/vendor/css/core.css') }}">
 <link rel="stylesheet" href="{{ asset('organization/css/demo.css') }}">
 <link rel="stylesheet" href="{{ asset('organization/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
+{{-- Notyf toast notifications (global — used via window.notyf). --}}
+<link rel="stylesheet" href="{{ asset('organization/vendor/libs/notyf/notyf.css') }}">
 
 @stack('vendor-styles')
 @stack('styles')
@@ -25,5 +27,4 @@
 <script src="{{ asset('organization/js/app.js') }}"></script>
 
 <script src="{{ asset('organization/vendor/js/helpers.js') }}"></script>
-<script src="{{ asset('organization/vendor/js/template-customizer.js') }}"></script>
 <script src="{{ asset('organization/js/config.js') }}"></script>

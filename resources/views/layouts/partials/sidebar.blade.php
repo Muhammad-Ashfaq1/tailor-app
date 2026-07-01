@@ -42,6 +42,14 @@
                     <div>Dashboard</div>
                 </a>
             </li>
+            @can('customers.view')
+                <li class="menu-item {{ request()->routeIs('tenant.customers.*') ? 'active' : '' }}">
+                    <a href="{{ route('tenant.customers.index') }}" class="menu-link">
+                        <i class="menu-icon icon-base ti tabler-user-heart"></i>
+                        <div>Customers</div>
+                    </a>
+                </li>
+            @endcan
             @can('members.view')
                 <li class="menu-item {{ request()->routeIs('tenant.members.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.members.index') }}" class="menu-link">
