@@ -13,12 +13,7 @@ enum OrganizationStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Pending => 'Pending review',
-            self::Approved => 'Approved',
-            self::Suspended => 'Suspended',
-            self::Rejected => 'Rejected',
-        };
+        return __("organizations.status.{$this->value}");
     }
 
     /** Bootstrap/Vuexy badge colour for the status chip. */

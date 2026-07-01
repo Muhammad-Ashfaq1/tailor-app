@@ -13,25 +13,25 @@
             <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a href="{{ route('admin.dashboard') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-smart-home"></i>
-                    <div>Dashboard</div>
+                    <div>{{ __('menu.dashboard') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('admin.organizations.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.organizations.index') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-building"></i>
-                    <div>Organizations</div>
+                    <div>{{ __('menu.organizations') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.leads.index') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-user-plus"></i>
-                    <div>Leads</div>
+                    <div>{{ __('menu.leads') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.reports.index') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-chart-bar"></i>
-                    <div>Reports</div>
+                    <div>{{ __('menu.reports') }}</div>
                 </a>
             </li>
         @else
@@ -39,14 +39,14 @@
             <li class="menu-item {{ request()->routeIs('tenant.dashboard') ? 'active' : '' }}">
                 <a href="{{ route('tenant.dashboard') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-smart-home"></i>
-                    <div>Dashboard</div>
+                    <div>{{ __('menu.dashboard') }}</div>
                 </a>
             </li>
             @can('customers.view')
                 <li class="menu-item {{ request()->routeIs('tenant.customers.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.customers.index') }}" class="menu-link">
                         <i class="menu-icon icon-base ti tabler-user-heart"></i>
-                        <div>Customers</div>
+                        <div>{{ __('menu.customers') }}</div>
                     </a>
                 </li>
             @endcan
@@ -54,7 +54,7 @@
                 <li class="menu-item {{ request()->routeIs('tenant.members.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.members.index') }}" class="menu-link">
                         <i class="menu-icon icon-base ti tabler-users"></i>
-                        <div>Members</div>
+                        <div>{{ __('menu.members') }}</div>
                     </a>
                 </li>
             @endcan
@@ -62,14 +62,14 @@
                 <li class="menu-item {{ request()->routeIs('tenant.roles.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.roles.index') }}" class="menu-link">
                         <i class="menu-icon icon-base ti tabler-shield-lock"></i>
-                        <div>Roles &amp; Permissions</div>
+                        <div>{{ __('menu.roles') }}</div>
                     </a>
                 </li>
             @endcan
             <li class="menu-item {{ request()->routeIs('tenant.reports.*') ? 'active' : '' }}">
                 <a href="{{ route('tenant.reports.index') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-chart-bar"></i>
-                    <div>Reports</div>
+                    <div>{{ __('menu.reports') }}</div>
                 </a>
             </li>
             @can('settings.manage')
@@ -77,7 +77,7 @@
                 <li class="menu-item mt-auto {{ request()->routeIs('tenant.settings.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.settings.index') }}" class="menu-link">
                         <i class="menu-icon icon-base ti tabler-settings"></i>
-                        <div>Settings</div>
+                        <div>{{ __('menu.settings') }}</div>
                     </a>
                 </li>
             @endcan

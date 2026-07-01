@@ -11,10 +11,7 @@ enum CustomerType: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::WalkIn => 'Walk-in',
-            self::Regular => 'Regular',
-        };
+        return __("customers.types.{$this->value}");
     }
 
     /** Bootstrap/Vuexy badge colour for the type chip. */

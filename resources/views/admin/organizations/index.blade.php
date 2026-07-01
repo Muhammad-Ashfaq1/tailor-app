@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Organizations')
-@section('page-title', 'Organizations')
+@section('title', __('organizations.title'))
+@section('page-title', __('organizations.title'))
 
 @push('vendor-styles')
     <link rel="stylesheet" href="{{ asset('organization/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
@@ -11,12 +11,12 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Organizations</h5>
-            <button class="btn btn-primary" id="btn-new-org"><i class="icon-base ti tabler-plus me-1"></i> New Organization</button>
+            <h5 class="mb-0">{{ __('organizations.title') }}</h5>
+            <button class="btn btn-primary" id="btn-new-org"><i class="icon-base ti tabler-plus me-1"></i> {{ __('organizations.new') }}</button>
         </div>
         <div class="card-datatable table-responsive p-3">
             <table class="table" id="orgs-table" style="width:100%">
-                <thead><tr><th>Name</th><th>Slug</th><th>Users</th><th>Status</th><th>Created</th><th class="text-end">Actions</th></tr></thead>
+                <thead><tr><th>{{ __('organizations.name') }}</th><th>{{ __('organizations.slug') }}</th><th>{{ __('organizations.users') }}</th><th>{{ __('organizations.status_label') }}</th><th>{{ __('organizations.created') }}</th><th class="text-end">{{ __('app.actions') }}</th></tr></thead>
             </table>
         </div>
     </div>
@@ -25,18 +25,18 @@
         <div class="modal-dialog modal-dialog-centered">
             <form class="modal-content" id="org-form">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="org-modal-title">New Organization</h5>
+                    <h5 class="modal-title" id="org-modal-title">{{ __('organizations.new') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="org-id">
                     <div class="mb-3">
-                        <label class="form-label" for="org-name">Name</label>
+                        <label class="form-label" for="org-name">{{ __('organizations.name') }}</label>
                         <input type="text" class="form-control" id="org-name" name="name" required>
                         <div class="invalid-feedback" data-field="name"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="org-status">Status</label>
+                        <label class="form-label" for="org-status">{{ __('organizations.status_label') }}</label>
                         <select class="form-select" id="org-status" name="status">
                             @foreach ($statuses as $status)
                                 <option value="{{ $status['value'] }}">{{ $status['label'] }}</option>
@@ -46,8 +46,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">{{ __('app.cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('app.save') }}</button>
                 </div>
             </form>
         </div>
@@ -62,6 +62,7 @@
 @push('scripts')
 <script>
 (function () {
+    const T = @json(__('organizations'));
     const statuses = @json($statuses);
     const urls = {
         listing: @json(route('admin.organizations.listing')),
@@ -84,7 +85,7 @@
             { data: 'created_at' },
             { data: 'id', orderable: false, searchable: false, className: 'text-end', render: (id, t, row) =>
                 `<button class="btn btn-sm btn-icon edit-org" data-id="${row.id}"><i class="icon-base ti tabler-edit"></i></button>`+
-                `<button class="btn btn-sm btn-icon impersonate-org" data-id="${row.id}" title="Impersonate admin"><i class="icon-base ti tabler-user-share"></i></button>`
+                `<button class="btn btn-sm btn-icon impersonate-org" data-id="${row.id}" title="${T.impersonate_admin}"><i class="icon-base ti tabler-user-share"></i></button>`
             },
         ],
         order: [[4, 'desc']],
@@ -94,7 +95,7 @@
 
     document.getElementById('btn-new-org').addEventListener('click', () => {
         clearErrors(); form.reset(); document.getElementById('org-id').value = '';
-        document.getElementById('org-modal-title').textContent = 'New Organization';
+        document.getElementById('org-modal-title').textContent = T.new;
         modal.show();
     });
 
@@ -104,7 +105,7 @@
             document.getElementById('org-id').value = data.id;
             document.getElementById('org-name').value = data.name;
             document.getElementById('org-status').value = data.status;
-            document.getElementById('org-modal-title').textContent = 'Edit Organization';
+            document.getElementById('org-modal-title').textContent = T.edit;
             modal.show();
         });
     });
@@ -123,14 +124,14 @@
                     if (input) input.classList.add('is-invalid');
                     if (fb) fb.textContent = errors[f][0];
                 });
-            } else { Swal.fire({ icon: 'error', title: 'Something went wrong' }); }
+            } else { Swal.fire({ icon: 'error', title: window.AppTranslations.operationFailed }); }
         });
     });
 
     $('#orgs-table tbody').on('change', '.org-status', function () {
         axios.post(`${urls.base}/${this.dataset.id}/status`, { status: this.value })
             .then(({ data }) => Swal.fire({ icon: 'success', title: data.message, timer: 1200, showConfirmButton: false }))
-            .catch(() => { Swal.fire({ icon: 'error', title: 'Could not update' }); table.ajax.reload(null, false); });
+            .catch(() => { Swal.fire({ icon: 'error', title: T.update_failed }); table.ajax.reload(null, false); });
     });
 
     $('#orgs-table tbody').on('click', '.impersonate-org', function () {

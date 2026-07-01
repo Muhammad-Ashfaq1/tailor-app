@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    // Generic actions
+    'save' => 'Save',
+    'save_changes' => 'Save Changes',
+    'cancel' => 'Cancel',
+    'close' => 'Close',
+    'create' => 'Create',
+    'add' => 'Add',
+    'edit' => 'Edit',
+    'update' => 'Update',
+    'delete' => 'Delete',
+    'remove' => 'Remove',
+    'view' => 'View',
+    'show' => 'Show',
+    'search' => 'Search',
+    'filter' => 'Filter',
+    'reset' => 'Reset',
+    'submit' => 'Submit',
+    'back' => 'Back',
+    'confirm' => 'Confirm',
+    'export' => 'Export',
+    'print' => 'Print',
+    'download' => 'Download',
+    'refresh' => 'Refresh',
+    'select' => 'Select',
+    'select_option' => 'Select an option',
+    'all' => 'All',
+    'none' => 'None',
+    'loading' => 'Loading…',
+    'processing' => 'Processing…',
+
+    // Table / status
+    'actions' => 'Actions',
+    'status' => 'Status',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'enabled' => 'Enabled',
+    'disabled' => 'Disabled',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'created_at' => 'Created At',
+    'updated_at' => 'Updated At',
+    'id' => 'ID',
+    'name' => 'Name',
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'notes' => 'Notes',
+
+    // Confirmations
+    'confirm_delete' => 'Are you sure?',
+    'confirm_delete_text' => 'This action cannot be undone.',
+    'yes_delete' => 'Yes, delete it',
+    'yes_proceed' => 'Yes, proceed',
+
+    // Flash / result messages
+    'saved_successfully' => 'Saved successfully.',
+    'created_successfully' => 'Created successfully.',
+    'updated_successfully' => 'Updated successfully.',
+    'deleted_successfully' => 'Deleted successfully.',
+    'operation_failed' => 'Something went wrong. Please try again.',
+    'no_records' => 'No records found.',
+    'empty_state' => 'Nothing here yet.',
+    'required_fields' => 'Please fill in the required fields.',
+
+    // DataTables language strings
+    'datatable' => [
+        'processing' => 'Processing…',
+        'search' => 'Search:',
+        'length_menu' => 'Show _MENU_ entries',
+        'info' => 'Showing _START_ to _END_ of _TOTAL_ entries',
+        'info_empty' => 'Showing 0 to 0 of 0 entries',
+        'info_filtered' => '(filtered from _MAX_ total entries)',
+        'load_more' => 'Loading…',
+        'zero_records' => 'No matching records found',
+        'empty_table' => 'No data available in table',
+        'first' => 'First',
+        'last' => 'Last',
+        'next' => 'Next',
+        'previous' => 'Previous',
+    ],
+];

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | Group middleware: auth + active + org.init + org.approved + member.panel + banner.
 */
 
-Route::middleware(['web', 'auth', 'active.user', 'org.init', 'org.approved', 'member.panel', 'impersonating'])
+Route::middleware(['web', 'auth', 'active.user', 'org.init', 'set.organization.locale', 'org.approved', 'member.panel', 'impersonating'])
     ->prefix('member')
     ->name('member.')
     ->group(function (): void {

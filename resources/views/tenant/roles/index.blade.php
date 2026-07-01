@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Roles & Permissions')
-@section('page-title', 'Roles & Permissions')
+@section('title', __('roles.roles_permissions'))
+@section('page-title', __('roles.roles_permissions'))
 
 @php use Illuminate\Support\Str; @endphp
 
@@ -13,12 +13,12 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Roles</h5>
-            <button class="btn btn-primary" id="btn-new-role"><i class="icon-base ti tabler-plus me-1"></i> New Role</button>
+            <h5 class="mb-0">{{ __('roles.title') }}</h5>
+            <button class="btn btn-primary" id="btn-new-role"><i class="icon-base ti tabler-plus me-1"></i> {{ __('roles.new') }}</button>
         </div>
         <div class="card-datatable table-responsive p-3">
             <table class="table" id="roles-table" style="width:100%">
-                <thead><tr><th>Role</th><th>Permissions</th><th class="text-end">Actions</th></tr></thead>
+                <thead><tr><th>{{ __('roles.role') }}</th><th>{{ __('roles.permissions') }}</th><th class="text-end">{{ __('app.actions') }}</th></tr></thead>
             </table>
         </div>
     </div>
@@ -27,18 +27,18 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <form class="modal-content" id="role-form">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="role-modal-title">New Role</h5>
+                    <h5 class="modal-title" id="role-modal-title">{{ __('roles.new') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="role-id">
                     <div class="mb-3">
-                        <label class="form-label" for="role-name">Role name</label>
+                        <label class="form-label" for="role-name">{{ __('roles.role_name') }}</label>
                         <input type="text" class="form-control" id="role-name" name="name" required>
-                        <div class="form-text" id="role-protected-note" style="display:none">This role is protected — its name cannot be changed.</div>
+                        <div class="form-text" id="role-protected-note" style="display:none">{{ __('roles.protected_note') }}</div>
                         <div class="invalid-feedback" data-field="name"></div>
                     </div>
-                    <label class="form-label">Permissions</label>
+                    <label class="form-label">{{ __('roles.permissions') }}</label>
                     <div class="row">
                         @foreach ($permissionGroups as $resource => $permissions)
                             <div class="col-md-6 mb-3">
@@ -57,8 +57,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">{{ __('app.cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('app.save') }}</button>
                 </div>
             </form>
         </div>
@@ -73,6 +73,7 @@
 @push('scripts')
 <script>
 (function () {
+    const T = @json(__('roles'));
     const urls = {
         listing: @json(route('tenant.roles.listing')),
         save: @json(route('tenant.roles.save')),
@@ -86,7 +87,7 @@
     const table = $('#roles-table').DataTable({
         processing: true, serverSide: true, ajax: { url: urls.listing },
         columns: [
-            { data: 'name', render: (d, t, row) => row.protected ? `${d} <span class="badge bg-label-secondary">protected</span>` : d },
+            { data: 'name', render: (d, t, row) => row.protected ? `${d} <span class="badge bg-label-secondary">${T.protected}</span>` : d },
             { data: 'permissions_count' },
             { data: 'id', orderable: false, searchable: false, className: 'text-end', render: (id, t, row) => {
                 let html = `<button class="btn btn-sm btn-icon edit-role" data-id="${row.id}">`+
@@ -107,7 +108,7 @@
         document.getElementById('role-id').value = '';
         nameInput.disabled = false; protectedNote.style.display = 'none';
         setChecks([]);
-        document.getElementById('role-modal-title').textContent = 'New Role';
+        document.getElementById('role-modal-title').textContent = T.new;
         modal.show();
     });
 
@@ -120,7 +121,7 @@
         nameInput.disabled = row.protected;
         protectedNote.style.display = row.protected ? 'block' : 'none';
         setChecks(row.permissions || []);
-        document.getElementById('role-modal-title').textContent = 'Edit Role';
+        document.getElementById('role-modal-title').textContent = T.edit;
         modal.show();
     });
 
@@ -143,19 +144,19 @@
                     if (input) input.classList.add('is-invalid');
                     if (fb) fb.textContent = errors[f][0];
                 });
-            } else { Swal.fire({ icon: 'error', title: 'Something went wrong' }); }
+            } else { Swal.fire({ icon: 'error', title: window.AppTranslations.operationFailed }); }
         });
     });
 
     $('#roles-table tbody').on('click', '.delete-role', function () {
         const id = this.dataset.id, name = this.dataset.name;
-        Swal.fire({ title: `Delete "${name}"?`, icon: 'warning', showCancelButton: true, buttonsStyling: false,
-            confirmButtonText: 'Delete', customClass: { confirmButton: 'btn btn-danger', cancelButton: 'btn btn-label-secondary' } })
+        Swal.fire({ title: T.delete_confirm.replace(':name', name), icon: 'warning', showCancelButton: true, buttonsStyling: false,
+            confirmButtonText: window.AppTranslations.delete, customClass: { confirmButton: 'btn btn-danger', cancelButton: 'btn btn-label-secondary' } })
         .then(r => { if (!r.isConfirmed) return;
             axios.delete(`${urls.base}/${id}`).then(({ data }) => {
                 table.ajax.reload(null, false);
                 Swal.fire({ icon: 'success', title: data.message, timer: 1400, showConfirmButton: false });
-            }).catch(err => Swal.fire({ icon: 'error', title: err.response?.data?.message || 'Cannot delete' }));
+            }).catch(err => Swal.fire({ icon: 'error', title: err.response?.data?.message || T.cannot_delete }));
         });
     });
 })();

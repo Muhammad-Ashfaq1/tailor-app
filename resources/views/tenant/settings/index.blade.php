@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Settings')
-@section('page-title', 'Settings')
+@section('title', __('settings.title'))
+@section('page-title', __('settings.title'))
 
 @php
     // Settings tabs (label + icon) — defined here in the view, not the controller.
     $tabs = [
-        'profile' => ['label' => 'Shop Profile', 'icon' => 'tabler-building-store'],
-        'regional' => ['label' => 'Regional & Billing', 'icon' => 'tabler-world'],
-        'operations' => ['label' => 'Operations', 'icon' => 'tabler-settings'],
-        'notifications' => ['label' => 'Notifications & Loyalty', 'icon' => 'tabler-bell'],
-        'invoice' => ['label' => 'Order & Invoice', 'icon' => 'tabler-receipt'],
-        'roles' => ['label' => 'Roles & Permissions', 'icon' => 'tabler-shield-lock'],
+        'profile' => ['label' => __('settings.tabs.profile'), 'icon' => 'tabler-building-store'],
+        'regional' => ['label' => __('settings.tabs.regional'), 'icon' => 'tabler-world'],
+        'operations' => ['label' => __('settings.tabs.operations'), 'icon' => 'tabler-settings'],
+        'notifications' => ['label' => __('settings.tabs.notifications'), 'icon' => 'tabler-bell'],
+        'invoice' => ['label' => __('settings.tabs.invoice'), 'icon' => 'tabler-receipt'],
+        'roles' => ['label' => __('settings.tabs.roles'), 'icon' => 'tabler-shield-lock'],
     ];
 @endphp
 

@@ -42,4 +42,20 @@ class SaveMemberRequest extends FormRequest
             'organization_id' => ['prohibited'],
         ];
     }
+
+    /**
+     * Localised field names for validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('members.name'),
+            'email' => __('members.email'),
+            'role' => __('members.role'),
+            'is_active' => __('members.status'),
+            'password' => __('members.password'),
+        ];
+    }
 }

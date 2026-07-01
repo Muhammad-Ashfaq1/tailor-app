@@ -1,7 +1,7 @@
 @extends($layout)
 
-@section('title', 'Reports')
-@section('page-title', 'Reports')
+@section('title', __('reports.title'))
+@section('page-title', __('reports.title'))
 
 @section('content')
     <div class="row g-4">
@@ -14,14 +14,14 @@
                             <h5 class="mb-0">{{ $definition->label() }}</h5>
                         </div>
                         <a href="{{ route("{$prefix}.reports.show", $key) }}" class="btn btn-outline-primary mt-auto">
-                            <i class="icon-base ti tabler-eye me-1"></i> View report
+                            <i class="icon-base ti tabler-eye me-1"></i> {{ __('reports.view_report') }}
                         </a>
                     </div>
                 </div>
             </div>
         @empty
             <div class="col-12">
-                <div class="alert alert-info mb-0">No reports are available.</div>
+                <div class="alert alert-info mb-0">{{ __('reports.none_available') }}</div>
             </div>
         @endforelse
     </div>

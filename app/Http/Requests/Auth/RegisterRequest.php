@@ -31,4 +31,17 @@ class RegisterRequest extends FormRequest
             'is_active' => ['prohibited'],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'organization_name' => __('auth.organization_name'),
+            'name' => __('auth.name'),
+            'email' => __('auth.email_address'),
+            'password' => __('auth.password_label'),
+        ];
+    }
 }

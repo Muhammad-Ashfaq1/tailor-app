@@ -9,7 +9,7 @@
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
-                <span class="fw-medium">@yield('page-title', 'Dashboard')</span>
+                <span class="fw-medium">@yield('page-title', __('menu.dashboard'))</span>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-item">
-                                <i class="icon-base ti tabler-logout me-2"></i> Log out
+                                <i class="icon-base ti tabler-logout me-2"></i> {{ __('menu.logout') }}
                             </button>
                         </form>
                     </li>

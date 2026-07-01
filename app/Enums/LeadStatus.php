@@ -14,13 +14,7 @@ enum LeadStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::New => 'New',
-            self::Contacted => 'Contacted',
-            self::Qualified => 'Qualified',
-            self::Converted => 'Converted',
-            self::Rejected => 'Rejected',
-        };
+        return __("leads.status.{$this->value}");
     }
 
     /** Bootstrap/Vuexy badge colour for the status chip. */

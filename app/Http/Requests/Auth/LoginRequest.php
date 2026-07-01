@@ -24,4 +24,15 @@ class LoginRequest extends FormRequest
             'remember' => ['nullable', 'boolean'],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'email' => __('auth.email_address'),
+            'password' => __('auth.password_label'),
+        ];
+    }
 }

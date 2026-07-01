@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Leads')
-@section('page-title', 'Leads')
+@section('title', __('leads.title'))
+@section('page-title', __('leads.title'))
 
 @push('vendor-styles')
     <link rel="stylesheet" href="{{ asset('organization/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
@@ -10,16 +10,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header"><h5 class="mb-0">Lead triage</h5></div>
+        <div class="card-header"><h5 class="mb-0">{{ __('leads.triage') }}</h5></div>
         <div class="card-datatable table-responsive p-3">
             <table class="table" id="leads-table" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Company</th>
-                        <th>Created</th>
-                        <th>Status</th>
+                        <th>{{ __('leads.name') }}</th>
+                        <th>{{ __('leads.email') }}</th>
+                        <th>{{ __('leads.company') }}</th>
+                        <th>{{ __('leads.created') }}</th>
+                        <th>{{ __('leads.status_label') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -35,6 +35,7 @@
 @push('scripts')
 <script>
 (function () {
+    const T = @json(__('leads'));
     const listingUrl = @json(route('admin.leads.listing'));
     const statusBase = @json(url('admin/leads'));
     const statuses = @json($statuses);
@@ -59,7 +60,7 @@
         const id = this.dataset.id;
         axios.post(`${statusBase}/${id}/status`, { status: this.value })
             .then(({ data }) => Swal.fire({ icon: 'success', title: data.message, timer: 1100, showConfirmButton: false }))
-            .catch(() => { Swal.fire({ icon: 'error', title: 'Could not update' }); table.ajax.reload(null, false); });
+            .catch(() => { Swal.fire({ icon: 'error', title: T.update_failed }); table.ajax.reload(null, false); });
     });
 })();
 </script>

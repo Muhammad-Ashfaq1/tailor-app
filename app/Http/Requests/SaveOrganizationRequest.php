@@ -27,4 +27,15 @@ class SaveOrganizationRequest extends FormRequest
             'status' => ['required', Rule::enum(OrganizationStatus::class)],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('organizations.name'),
+            'status' => __('organizations.status_label'),
+        ];
+    }
 }

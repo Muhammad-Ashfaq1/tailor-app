@@ -48,7 +48,8 @@ final class SettingsSchema
                 'country' => ['rules' => ['nullable', 'string', 'max:120'], 'path' => 'profile.country'],
             ],
             'regional' => [
-                'locale' => ['rules' => ['required', 'string', 'max:10'], 'path' => 'regional.locale'],
+                'locale' => ['rules' => ['required', 'in:en,ar'], 'path' => 'regional.locale'],
+                'country' => ['rules' => ['nullable', 'string', 'size:2'], 'path' => 'regional.country'],
                 'timezone' => ['rules' => ['required', 'timezone'], 'path' => 'regional.timezone'],
                 'date_format' => ['rules' => ['required', 'string', 'max:20'], 'path' => 'regional.date_format'],
                 'time_format' => ['rules' => ['required', 'string', 'max:20'], 'path' => 'regional.time_format'],

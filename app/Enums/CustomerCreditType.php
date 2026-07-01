@@ -18,11 +18,7 @@ enum CustomerCreditType: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::None => 'No credit',
-            self::Percentage => 'Percentage',
-            self::Fixed => 'Fixed amount',
-        };
+        return __("customers.credit_types.{$this->value}");
     }
 
     public function color(): string

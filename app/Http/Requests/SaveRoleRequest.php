@@ -27,4 +27,15 @@ class SaveRoleRequest extends FormRequest
             'permissions.*' => [Rule::in(PermissionCatalog::all())],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('roles.role_name'),
+            'permissions' => __('roles.permissions'),
+        ];
+    }
 }

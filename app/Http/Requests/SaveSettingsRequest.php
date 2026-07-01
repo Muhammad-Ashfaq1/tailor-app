@@ -35,4 +35,25 @@ class SaveSettingsRequest extends FormRequest
 
         return $rules;
     }
+
+    /**
+     * Localised field names for the current section's inputs. Keys mirror the
+     * schema field names; a matching settings.* line supplies the label.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        $section = (string) $this->route('section');
+
+        $attributes = [];
+        foreach (array_keys(SettingsSchema::section($section)) as $field) {
+            $key = "settings.{$field}";
+            $label = __($key);
+            // Fall back to the raw field name if no translation line exists.
+            $attributes[$field] = $label === $key ? $field : $label;
+        }
+
+        return $attributes;
+    }
 }

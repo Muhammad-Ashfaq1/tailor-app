@@ -1,0 +1,117 @@
+/* ------------------------------------------------------------------
+ * custom-rtl.css
+ * Minimal RTL overrides for the Vuexy (Bootstrap 5) theme. The theme ships
+ * only an LTR-compiled core.css, so this file patches the common cases when
+ * <html dir="rtl"> is set (Arabic locale). No build step — plain CSS.
+ * ------------------------------------------------------------------ */
+
+html[dir="rtl"] body {
+    text-align: right;
+}
+
+/* Generic text alignment helpers keep working under RTL. */
+html[dir="rtl"] .text-start { text-align: right !important; }
+html[dir="rtl"] .text-end   { text-align: left  !important; }
+
+/* --- Spacing utilities: Bootstrap's ms-*/me-* are physical in this build --- */
+html[dir="rtl"] .me-1 { margin-right: 0 !important; margin-left: 0.25rem !important; }
+html[dir="rtl"] .me-2 { margin-right: 0 !important; margin-left: 0.5rem  !important; }
+html[dir="rtl"] .me-3 { margin-right: 0 !important; margin-left: 1rem    !important; }
+html[dir="rtl"] .me-4 { margin-right: 0 !important; margin-left: 1.5rem  !important; }
+html[dir="rtl"] .ms-1 { margin-left: 0 !important; margin-right: 0.25rem !important; }
+html[dir="rtl"] .ms-2 { margin-left: 0 !important; margin-right: 0.5rem  !important; }
+html[dir="rtl"] .ms-3 { margin-left: 0 !important; margin-right: 1rem    !important; }
+html[dir="rtl"] .ms-auto { margin-left: unset !important; margin-right: auto !important; }
+html[dir="rtl"] .me-auto { margin-right: unset !important; margin-left: auto !important; }
+
+/* --- Sidebar / vertical menu: pin to the right, flip menu text & icons --- */
+html[dir="rtl"] .layout-menu {
+    left: auto;
+    right: 0;
+}
+html[dir="rtl"] .layout-menu .menu-item .menu-link {
+    text-align: right;
+}
+html[dir="rtl"] .menu-icon {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+html[dir="rtl"] .layout-page {
+    /* Fixed layout offsets the content by the menu width on the left in LTR. */
+    padding-left: 0;
+}
+
+/* --- Navbar / content --- */
+html[dir="rtl"] .navbar-nav.ms-auto { margin-right: auto !important; margin-left: 0 !important; }
+
+/* --- Dropdowns: align menus to the correct edge --- */
+html[dir="rtl"] .dropdown-menu-end {
+    right: auto !important;
+    left: 0 !important;
+}
+html[dir="rtl"] .dropdown-menu {
+    text-align: right;
+}
+
+/* --- Forms --- */
+html[dir="rtl"] .form-label,
+html[dir="rtl"] .form-check-label,
+html[dir="rtl"] .form-text {
+    text-align: right;
+}
+html[dir="rtl"] .form-check {
+    padding-right: 1.5em;
+    padding-left: 0;
+}
+html[dir="rtl"] .form-check .form-check-input {
+    float: right;
+    margin-right: -1.5em;
+    margin-left: 0;
+}
+html[dir="rtl"] .form-switch {
+    padding-right: 2.5em;
+    padding-left: 0;
+}
+html[dir="rtl"] .form-switch .form-check-input {
+    margin-right: -2.5em;
+    margin-left: 0;
+}
+html[dir="rtl"] .input-group-text {
+    text-align: right;
+}
+
+/* --- Modals: move the close button to the left edge --- */
+html[dir="rtl"] .modal-header .btn-close {
+    margin: calc(-0.5 * var(--bs-modal-header-padding-y)) auto
+            calc(-0.5 * var(--bs-modal-header-padding-y))
+            calc(-0.5 * var(--bs-modal-header-padding-x)) !important;
+}
+html[dir="rtl"] .modal-footer > * {
+    margin-right: 0.25rem;
+    margin-left: 0.25rem;
+}
+
+/* --- DataTables: flip length/filter/pagination alignment --- */
+html[dir="rtl"] .dataTables_wrapper .dataTables_filter { text-align: left; }
+html[dir="rtl"] .dataTables_wrapper .dataTables_length { text-align: right; }
+html[dir="rtl"] .dataTables_wrapper .dataTables_filter input { margin-right: 0.5em; margin-left: 0; }
+html[dir="rtl"] .dataTables_wrapper .dataTables_paginate { text-align: left; }
+html[dir="rtl"] table.dataTable thead th,
+html[dir="rtl"] table.dataTable tbody td { text-align: right; }
+html[dir="rtl"] table.dataTable thead th.text-end,
+html[dir="rtl"] table.dataTable tbody td.text-end { text-align: left; }
+
+/* --- Select2 --- */
+html[dir="rtl"] .select2-container--default .select2-selection--single .select2-selection__arrow {
+    right: auto;
+    left: 3px;
+}
+html[dir="rtl"] .select2-container--default .select2-selection--single .select2-selection__rendered {
+    text-align: right;
+    padding-right: 0.75rem;
+    padding-left: 20px;
+}
+
+/* --- Misc: icon spacing inside buttons --- */
+html[dir="rtl"] .btn .icon-base + span,
+html[dir="rtl"] .btn i + span { margin-right: 0.25rem; }

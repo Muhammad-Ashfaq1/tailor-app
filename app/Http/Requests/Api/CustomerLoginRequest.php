@@ -24,4 +24,16 @@ class CustomerLoginRequest extends FormRequest
             'password' => ['required', 'string'],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'organization' => __('auth.organization_name'),
+            'email' => __('auth.email_address'),
+            'password' => __('auth.password_label'),
+        ];
+    }
 }

@@ -36,7 +36,9 @@ final class OrganizationSettings
             'thousands_separator' => ',',
             'decimal_separator' => '.',
             // Locale + regional formatting.
-            'locale' => 'en',
+            'locale' => 'en',           // en | ar (visible UI language)
+            'direction' => 'ltr',       // ltr | rtl — always derived from locale at runtime
+            'country' => 'SA',
             'timezone' => 'Asia/Riyadh',
             'date_format' => 'd M Y',
             'time_format' => 'h:i A',

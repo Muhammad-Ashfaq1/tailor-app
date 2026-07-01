@@ -13,4 +13,18 @@
 
 <script src="{{ asset('organization/js/main.js') }}"></script>
 
+{{-- Localise shared plugin defaults once, before any per-page init runs. --}}
+<script>
+    (function () {
+        if (window.jQuery && jQuery.fn.dataTable && window.AppTranslations) {
+            jQuery.extend(true, jQuery.fn.dataTable.defaults, {
+                language: window.AppTranslations.datatable,
+            });
+        }
+        if (window.jQuery && jQuery.fn.select2) {
+            jQuery.fn.select2.defaults.set('dir', window.AppDirection || 'ltr');
+        }
+    })();
+</script>
+
 @stack('scripts')

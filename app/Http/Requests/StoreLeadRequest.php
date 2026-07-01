@@ -30,6 +30,19 @@ class StoreLeadRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('leads.name'),
+            'email' => __('leads.email'),
+            'company' => __('leads.company'),
+            'message' => __('app.notes'),
+        ];
+    }
+
     /** The persistable subset; status is forced server-side by the repository. */
     public function payload(): array
     {

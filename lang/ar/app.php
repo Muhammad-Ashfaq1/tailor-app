@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    // Generic actions
+    'save' => 'حفظ',
+    'save_changes' => 'حفظ التغييرات',
+    'cancel' => 'إلغاء',
+    'close' => 'إغلاق',
+    'create' => 'إنشاء',
+    'add' => 'إضافة',
+    'edit' => 'تعديل',
+    'update' => 'تحديث',
+    'delete' => 'حذف',
+    'remove' => 'إزالة',
+    'view' => 'عرض',
+    'show' => 'عرض',
+    'search' => 'بحث',
+    'filter' => 'تصفية',
+    'reset' => 'إعادة تعيين',
+    'submit' => 'إرسال',
+    'back' => 'رجوع',
+    'confirm' => 'تأكيد',
+    'export' => 'تصدير',
+    'print' => 'طباعة',
+    'download' => 'تنزيل',
+    'refresh' => 'تحديث',
+    'select' => 'اختيار',
+    'select_option' => 'اختر خيارًا',
+    'all' => 'الكل',
+    'none' => 'لا شيء',
+    'loading' => 'جاري التحميل…',
+    'processing' => 'جاري المعالجة…',
+
+    // Table / status
+    'actions' => 'الإجراءات',
+    'status' => 'الحالة',
+    'active' => 'نشط',
+    'inactive' => 'غير نشط',
+    'enabled' => 'مُفعّل',
+    'disabled' => 'مُعطّل',
+    'yes' => 'نعم',
+    'no' => 'لا',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'تاريخ التحديث',
+    'id' => 'المعرّف',
+    'name' => 'الاسم',
+    'email' => 'البريد الإلكتروني',
+    'phone' => 'الجوال',
+    'notes' => 'ملاحظات',
+
+    // Confirmations
+    'confirm_delete' => 'هل أنت متأكد؟',
+    'confirm_delete_text' => 'لا يمكن التراجع عن هذا الإجراء.',
+    'yes_delete' => 'نعم، احذف',
+    'yes_proceed' => 'نعم، متابعة',
+
+    // Flash / result messages
+    'saved_successfully' => 'تم الحفظ بنجاح.',
+    'created_successfully' => 'تم الإنشاء بنجاح.',
+    'updated_successfully' => 'تم التحديث بنجاح.',
+    'deleted_successfully' => 'تم الحذف بنجاح.',
+    'operation_failed' => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
+    'no_records' => 'لا توجد سجلات.',
+    'empty_state' => 'لا يوجد شيء هنا بعد.',
+    'required_fields' => 'يرجى تعبئة الحقول المطلوبة.',
+
+    // DataTables language strings
+    'datatable' => [
+        'processing' => 'جاري المعالجة…',
+        'search' => 'بحث:',
+        'length_menu' => 'عرض _MENU_ سجل',
+        'info' => 'عرض _START_ إلى _END_ من _TOTAL_ سجل',
+        'info_empty' => 'عرض 0 إلى 0 من 0 سجل',
+        'info_filtered' => '(منتقاة من إجمالي _MAX_ سجل)',
+        'load_more' => 'جاري التحميل…',
+        'zero_records' => 'لا توجد سجلات مطابقة',
+        'empty_table' => 'لا توجد بيانات في الجدول',
+        'first' => 'الأول',
+        'last' => 'الأخير',
+        'next' => 'التالي',
+        'previous' => 'السابق',
+    ],
+];

@@ -61,6 +61,27 @@ class SaveCustomerRequest extends FormRequest
     }
 
     /**
+     * Localised field names for validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('customers.name'),
+            'phone' => __('customers.phone'),
+            'address' => __('customers.address'),
+            'type' => __('customers.type'),
+            'credit_type' => __('customers.credit_type'),
+            'credit_value' => __('customers.credit_value'),
+            'notes' => __('customers.notes'),
+            'email' => __('customers.email'),
+            'is_active' => __('customers.status'),
+            'password' => __('customers.app_password'),
+        ];
+    }
+
+    /**
      * The clean attribute set handed to the repository.
      *
      * @return array<string, mixed>

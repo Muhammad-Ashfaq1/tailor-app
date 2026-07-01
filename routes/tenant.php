@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Tenant admin / manager routes — /tenant/*
 |--------------------------------------------------------------------------
-| Group middleware: auth + active + org.init (tenancy) + org.approved + banner.
+| Group middleware: auth + active + org.init (tenancy) + locale + org.approved + banner.
 | Per-route permission middleware is added on top (OR-form where relevant).
 */
 
-Route::middleware(['web', 'auth', 'active.user', 'org.init', 'org.approved', 'impersonating'])
+Route::middleware(['web', 'auth', 'active.user', 'org.init', 'set.organization.locale', 'org.approved', 'impersonating'])
     ->prefix('tenant')
     ->name('tenant.')
     ->group(function (): void {

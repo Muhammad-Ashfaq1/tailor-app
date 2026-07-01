@@ -10,6 +10,7 @@ use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\HandleImpersonation;
 use App\Http\Middleware\InitializeTenancyFromAuthenticatedUser;
 use App\Http\Middleware\InitializeTenancyFromCustomer;
+use App\Http\Middleware\SetOrganizationLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -53,6 +54,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'member.panel' => EnsureMemberPanelAccess::class,
             'impersonating' => HandleImpersonation::class,
             'org.init' => InitializeTenancyFromAuthenticatedUser::class,
+            'set.organization.locale' => SetOrganizationLocale::class,
             'org.approved' => EnsureOrganizationApproved::class,
             'super_admin' => EnsureSuperAdmin::class,
             'customer.org.init' => InitializeTenancyFromCustomer::class,

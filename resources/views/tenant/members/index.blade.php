@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Members')
-@section('page-title', 'Members')
+@section('title', __('members.title'))
+@section('page-title', __('members.title'))
 
 @php use Illuminate\Support\Str; @endphp
 
@@ -12,14 +12,14 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Members</h5>
+            <h5 class="mb-0">{{ __('members.title') }}</h5>
             @can('members.create')
-                <button class="btn btn-primary" id="btn-new-member"><i class="icon-base ti tabler-plus me-1"></i> New Member</button>
+                <button class="btn btn-primary" id="btn-new-member"><i class="icon-base ti tabler-plus me-1"></i> {{ __('members.new') }}</button>
             @endcan
         </div>
         <div class="card-datatable table-responsive p-3">
             <table class="table" id="members-table" style="width:100%">
-                <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+                <thead><tr><th>{{ __('members.name') }}</th><th>{{ __('members.email') }}</th><th>{{ __('members.role') }}</th><th>{{ __('members.status') }}</th><th class="text-end">{{ __('app.actions') }}</th></tr></thead>
             </table>
         </div>
     </div>
@@ -28,23 +28,23 @@
         <div class="modal-dialog modal-dialog-centered">
             <form class="modal-content" id="member-form">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="member-modal-title">New Member</h5>
+                    <h5 class="modal-title" id="member-modal-title">{{ __('members.new') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="member-id">
                     <div class="mb-3">
-                        <label class="form-label" for="member-name">Name</label>
+                        <label class="form-label" for="member-name">{{ __('members.name') }}</label>
                         <input type="text" class="form-control" id="member-name" name="name" required>
                         <div class="invalid-feedback" data-field="name"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="member-email">Email</label>
+                        <label class="form-label" for="member-email">{{ __('members.email') }}</label>
                         <input type="email" class="form-control" id="member-email" name="email" required>
                         <div class="invalid-feedback" data-field="email"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="member-role">Role</label>
+                        <label class="form-label" for="member-role">{{ __('members.role') }}</label>
                         <select class="form-select" id="member-role" name="role">
                             @foreach ($roles as $role)
                                 <option value="{{ $role }}">{{ Str::headline($role) }}</option>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label" for="member-password">Password <small class="text-muted" id="pw-hint"></small></label>
+                            <label class="form-label" for="member-password">{{ __('members.password') }} <small class="text-muted" id="pw-hint"></small></label>
                             <div class="input-group input-group-merge has-validation">
                                 <input type="password" class="form-control" id="member-password" name="password">
                                 <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label" for="member-password2">Confirm</label>
+                            <label class="form-label" for="member-password2">{{ __('members.confirm_password') }}</label>
                             <div class="input-group input-group-merge">
                                 <input type="password" class="form-control" id="member-password2" name="password_confirmation">
                                 <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
@@ -72,12 +72,12 @@
                     <input type="hidden" name="is_active" value="0">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="member-active" name="is_active" value="1" checked>
-                        <label class="form-check-label" for="member-active">Active</label>
+                        <label class="form-check-label" for="member-active">{{ __('members.active') }}</label>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">{{ __('app.cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('app.save') }}</button>
                 </div>
             </form>
         </div>
@@ -91,6 +91,7 @@
 @push('scripts')
 <script>
 (function () {
+    const T = @json(__('members'));
     const canUpdate = @json(auth()->user()->can('members.update'));
     const canImpersonate = @json(auth()->user()->can('members.impersonate'));
     const urls = {
@@ -107,12 +108,12 @@
             { data: 'name' },
             { data: 'email' },
             { data: 'role_label' },
-            { data: 'is_active', render: v => v ? '<span class="badge bg-label-success">Active</span>' : '<span class="badge bg-label-secondary">Inactive</span>' },
+            { data: 'is_active', render: v => v ? `<span class="badge bg-label-success">${window.AppTranslations.active}</span>` : `<span class="badge bg-label-secondary">${window.AppTranslations.inactive}</span>` },
             { data: 'id', orderable: false, searchable: false, className: 'text-end', render: (id, t, row) => {
                 let html = '';
                 if (canUpdate) html += `<button class="btn btn-sm btn-icon edit-member" data-id="${row.id}"><i class="icon-base ti tabler-edit"></i></button>`;
                 if (canImpersonate && !row.is_self && row.role !== 'tenant_admin')
-                    html += `<button class="btn btn-sm btn-icon impersonate-member" data-id="${row.id}" title="Impersonate"><i class="icon-base ti tabler-user-share"></i></button>`;
+                    html += `<button class="btn btn-sm btn-icon impersonate-member" data-id="${row.id}" title="${T.impersonate}"><i class="icon-base ti tabler-user-share"></i></button>`;
                 return html || '<span class="text-muted">—</span>';
             }},
         ],
@@ -124,8 +125,8 @@
         clearErrors(); form.reset();
         document.getElementById('member-id').value = '';
         document.getElementById('member-active').checked = true;
-        document.getElementById('pw-hint').textContent = '(required)';
-        document.getElementById('member-modal-title').textContent = 'New Member';
+        document.getElementById('pw-hint').textContent = T.password_required_hint;
+        document.getElementById('member-modal-title').textContent = T.new;
         modal.show();
     });
 
@@ -138,8 +139,8 @@
         document.getElementById('member-role').value = row.role;
         document.getElementById('member-active').checked = !!row.is_active;
         document.getElementById('member-password').value = '';
-        document.getElementById('pw-hint').textContent = '(leave blank to keep)';
-        document.getElementById('member-modal-title').textContent = 'Edit Member';
+        document.getElementById('pw-hint').textContent = T.password_keep_hint;
+        document.getElementById('member-modal-title').textContent = T.edit;
         modal.show();
     });
 
@@ -158,7 +159,7 @@
                     if (input) input.classList.add('is-invalid');
                     if (fb) fb.textContent = errors[f][0];
                 });
-            } else { notyf.failure('Something went wrong'); }
+            } else { notyf.failure(window.AppTranslations.operationFailed); }
         });
     });
 
