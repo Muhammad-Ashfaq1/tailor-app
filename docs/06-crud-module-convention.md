@@ -1,9 +1,10 @@
 # 06 — CRUD Module Convention
 
 **The most important doc for day-to-day work.** Every tenant resource follows
-the same vertical slice. This explains it end-to-end using **Projects** (and
-**Tasks**) as the worked example, then gives a step-by-step recipe for adding a
-new resource module.
+the same vertical slice. This explains it end-to-end using the live **Members**
+module as the worked example (with the central **Leads** module to show the
+repository pattern), then gives a step-by-step recipe for adding a new resource
+module.
 
 See also: [Tenancy](01-tenancy.md) · [RBAC](03-rbac.md) ·
 [Routing & middleware](02-routing-and-middleware.md) · [Frontend](10-frontend-assets-and-pwa.md)
@@ -12,102 +13,139 @@ See also: [Tenancy](01-tenancy.md) · [RBAC](03-rbac.md) ·
 
 ## The anatomy of a module
 
-A resource module is one vertical slice across these layers:
+A resource module is one vertical slice across these layers. Not every layer is
+mandatory — Members is org-scoped users with no slug/enum, while a slugged
+resource adds an enum, a repository and `HandlesSlugs`:
 
 ```
 Migration  →  Model (+ Enum)  →  Repository (Interface + impl)  →  FormRequest
            →  Controller  →  Routes (permissions)  →  Blade (listing + save modal)
-           +  Factory  +  Policy  +  Permissions in the catalog
+           +  Factory  +  Permissions in the catalog
 ```
 
-| Layer | Projects example | Responsibility |
+| Layer | Members example | Responsibility |
 | --- | --- | --- |
-| Migration | `2026_06_30_110001_create_projects_table.php` | `organization_id` FK, columns, audit cols, soft deletes, **`unique(['organization_id','slug'])`**. |
-| Enum | `app/Enums/ProjectStatus.php` | Status `value`/`label()`/`color()`/`options()`. |
-| Model | `app/Models/Project.php` | `BelongsToOrganization` + `FiltersByDateRange`, casts, relations. |
-| Interface | `app/Repositories/Interface/ProjectRepositoryInterface.php` | The repo contract. |
-| Repository | `app/Repositories/ProjectRepository.php` | `datatable()`, `save()`, `find()`, `delete()`, dropdowns. |
-| Base repo | `app/Repositories/BaseRepository.php` | `withAudit()` stamps `created_by`/`updated_by`. |
-| Slugs | `app/Repositories/Concerns/HandlesSlugs.php` | Per-org unique slugs. |
+| Model | `app/Models/User.php` | `organization_id` ownership; members are users sharing the current org. |
 | DataTable | `app/Support/DataTables/DataTableBuilder.php` | Reusable server-side DataTables responder. |
-| FormRequest | `app/Http/Requests/SaveProjectRequest.php` | Validation + `authorize()` + `payload()`. |
-| Controller | `app/Http/Controllers/Tenant/ProjectController.php` | Thin: request → repo → Blade/JSON. |
-| Routes | `routes/tenant.php` | `index`/`listing`/`show`/`save`/`destroy` + permission middleware. |
-| Blade | `resources/views/tenant/projects/index.blade.php` | Listing table + single save modal. |
-| Policy | `app/Policies/ProjectPolicy.php` | Ability checks for `authorize()`. |
-| Factory | `database/factories/ProjectFactory.php` | Seed/test data. |
+| FormRequest | `app/Http/Requests/SaveMemberRequest.php` | Validation + `authorize()` (create/update split). |
+| Controller | `app/Http/Controllers/Tenant/MemberController.php` | Thin: request → query/builder → Blade/JSON. |
+| Routes | `routes/tenant.php` | `index`/`listing`/`save` (+ `impersonate`) + permission middleware. |
+| Blade | `resources/views/tenant/members/index.blade.php` | Listing table + single save modal. |
+| Factory | `database/factories/UserFactory.php` | Seed/test data. |
+
+A slugged resource that owns its own table additionally uses a repository plus
+shared infra:
+
+| Layer | Repository-backed example | Responsibility |
+| --- | --- | --- |
+| Interface | `app/Repositories/Interface/LeadRepositoryInterface.php` | The repo contract. |
+| Repository | `app/Repositories/LeadRepository.php` | `datatable()`, `create()`/`save()`, status updates. |
+| Base repo | `app/Repositories/BaseRepository.php` | `withAudit()` stamps `created_by`/`updated_by`. |
+| Slugs | `app/Repositories/Concerns/HandlesSlugs.php` | Per-org unique slugs (`generateUniqueSlug()`). |
 
 ---
 
 ## How it works, layer by layer
 
-### Model — org-scoped + enum casts
+### Model — org-scoped
+
+Members are `User` rows sharing the current `organization_id`; the
+`BelongsToOrganization` trait (see [docs/01](01-tenancy.md)) supplies org
+isolation, auto-fills `organization_id` on create, and makes route-model
+binding org-safe. A resource that owns its own table looks the same:
 
 ```php
-// app/Models/Project.php
-class Project extends Model
+// a hypothetical slugged resource — app/Models/Widget.php
+class Widget extends Model
 {
     use BelongsToOrganization;   // org isolation (see docs/01)
     use FiltersByDateRange;      // dateRange() scope
     use HasFactory; use SoftDeletes;
 
     protected $fillable = ['name','slug','status','description','created_by','updated_by'];
-    protected function casts(): array { return ['status' => ProjectStatus::class]; }
-    public function getRouteKeyName(): string { return 'slug'; }   // /projects/{slug}
-    public function tasks(): HasMany { return $this->hasMany(Task::class); }
+    protected function casts(): array { return ['status' => WidgetStatus::class]; }
+    public function getRouteKeyName(): string { return 'slug'; }   // /widgets/{slug}
 }
 ```
 
 `organization_id` is **not** in `$fillable` — it's auto-filled by the trait and
 the FormRequest **prohibits** it from the client.
 
+### Controller listing — the DataTable shape
+
+Members build the server-side payload directly in the controller via the shared
+`DataTableBuilder`; the org scope is applied explicitly here because `User` is
+queried by `organization_id`:
+
+```php
+// app/Http/Controllers/Tenant/MemberController.php
+public function listing(Request $request): JsonResponse
+{
+    $query = User::query()->where('organization_id', OrganizationContext::id());
+
+    return response()->json(
+        DataTableBuilder::for($query, $request)
+            ->searchable(['name', 'email'])
+            ->orderable(['id', 'name', 'email', 'role', 'created_at'])
+            ->map(fn (User $user): array => [
+                'id' => $user->id, 'name' => $user->name, 'email' => $user->email,
+                'role' => $user->role, 'role_label' => Str::headline((string) $user->role),
+                'is_active' => $user->is_active, 'is_self' => $user->id === auth()->id(),
+            ])
+            ->toArray()
+    );
+}
+```
+
 ### Repository — owns persistence + listing shape
 
-The interface is bound to the implementation in `AppServiceProvider::register()`:
+For a resource that owns its own table, persistence and listing shape live in a
+repository bound interface→concrete in `AppServiceProvider::register()`:
 
 ```php
 private array $repositories = [
-    ProjectRepositoryInterface::class => ProjectRepository::class,
-    TaskRepositoryInterface::class    => TaskRepository::class,
-    LeadRepositoryInterface::class    => LeadRepository::class,
+    LeadRepositoryInterface::class => LeadRepository::class,
 ];
 // foreach: $this->app->bind($interface, $concrete);
 ```
 
-`datatable()` builds the server-side payload via the shared `DataTableBuilder`;
-note the org scope is automatic (no `where organization_id`):
+`datatable()` builds the server-side payload via the shared `DataTableBuilder`.
+For an org-owned model the org scope is automatic (no `where organization_id`
+needed); `Lead` is central, so its query is deliberately unscoped:
 
 ```php
-// app/Repositories/ProjectRepository.php
+// app/Repositories/LeadRepository.php
 public function datatable(Request $request): array
 {
-    $query = Project::query()->withCount('tasks');     // org scope auto-applied
+    $query = Lead::query();   // central resource — no global org scope here
     return DataTableBuilder::for($query, $request)
-        ->searchable(['name', 'slug'])
-        ->orderable(['id', 'name', 'status', 'created_at'])
-        ->map(fn (Project $p) => [
-            'id' => $p->id, 'name' => $p->name, 'slug' => $p->slug,
-            'status' => $p->status->value, 'status_label' => $p->status->label(),
-            'status_color' => $p->status->color(),
-            'tasks_count' => $p->tasks_count, 'created_at' => $p->created_at?->toDateString(),
+        ->searchable(['name', 'email', 'company'])
+        ->orderable(['id', 'status', 'created_at'])
+        ->map(fn (Lead $lead) => [
+            'id' => $lead->id, 'name' => $lead->name, 'email' => $lead->email,
+            'status' => $lead->status->value, 'status_label' => $lead->status->label(),
+            'status_color' => $lead->status->color(),
+            'created_at' => $lead->created_at?->toDateString(),
         ])->toArray();
 }
 ```
 
-`save()` handles **both create and update** (id present → update), regenerates
-the slug from the name only when it changes, and stamps audit columns:
+For an org-owned, slugged resource, a `save()` that handles **both create and
+update** (id present → update) regenerates the slug from the name only when it
+changes, and stamps audit columns through the base repository:
 
 ```php
-public function save(array $data, ?int $id = null): Project
+// pattern for a slugged, org-owned resource
+public function save(array $data, ?int $id = null): Widget
 {
     $creating = $id === null;
-    $project = $creating ? new Project : $this->find($id);
-    if ($project === null) abort(404);
-    if ($creating || ($data['name'] ?? null) !== $project->name) {
-        $data['slug'] = $this->generateUniqueSlug(Project::class, $data['name'], $creating ? null : $project->id);
+    $widget = $creating ? new Widget : $this->find($id);
+    if ($widget === null) abort(404);
+    if ($creating || ($data['name'] ?? null) !== $widget->name) {
+        $data['slug'] = $this->generateUniqueSlug(Widget::class, $data['name'], $creating ? null : $widget->id);
     }
-    $project->fill($this->withAudit($data, $creating))->save();
-    return $project->refresh();
+    $widget->fill($this->withAudit($data, $creating))->save();
+    return $widget->refresh();
 }
 ```
 
@@ -125,127 +163,137 @@ builder powers reports (see [07](07-dashboards-and-reports.md)).
 ### FormRequest — authz + payload shaping
 
 ```php
-// app/Http/Requests/SaveProjectRequest.php
+// app/Http/Requests/SaveMemberRequest.php
 public function authorize(): bool
 {
     return $this->boolean('_is_update')
-        ? (bool) $this->user()?->can('projects.update')
-        : (bool) $this->user()?->can('projects.create');
+        ? (bool) $this->user()?->can('members.update')
+        : (bool) $this->user()?->can('members.create');
 }
 protected function prepareForValidation(): void { $this->merge(['_is_update' => $this->filled('id')]); }
 
 public function rules(): array
 {
+    $id = $this->filled('id') ? (int) $this->input('id') : null;
     return [
-        'name'   => ['required','string','max:255'],
-        'status' => ['required', Rule::enum(ProjectStatus::class)],
-        'description' => ['nullable','string','max:5000'],
+        'id'    => ['nullable','integer'],
+        'name'  => ['required','string','max:255'],
+        'email' => ['required','email','max:255', Rule::unique('users','email')->ignore($id)],
+        'role'  => ['required', Rule::in(User::TENANT_ROLES)],
+        'is_active' => ['boolean'],
+        'password'  => [$id === null ? 'required' : 'nullable', 'confirmed', Password::defaults()],
         'organization_id' => ['prohibited'],   // server-set columns never from client
-        'created_by' => ['prohibited'], 'updated_by' => ['prohibited'],
     ];
 }
-public function payload(): array { return $this->safe()->only(['name','status','description']); }
 ```
 
-**Cross-tenant FK guard** (Tasks): `project_id` / `assigned_to` use
-`Rule::exists(...)->where('organization_id', $orgId)` so you can't attach to
-another tenant's rows.
+**Cross-tenant FK guard:** for any foreign key that references another tenant
+resource, use `Rule::exists(...)->where('organization_id', $orgId)` so you can't
+attach to another tenant's rows.
 
 ### Controller — thin
 
 ```php
-// app/Http/Controllers/Tenant/ProjectController.php
-public function __construct(private ProjectRepositoryInterface $projects) {}
+// app/Http/Controllers/Tenant/MemberController.php
+public function index(): View
+{ return view('tenant.members.index', ['roles' => User::TENANT_ROLES]); }
 
-public function index(): View { return view('tenant.projects.index', ['statuses' => $this->projects->statusOptions()]); }
-public function listing(Request $r): JsonResponse { return response()->json($this->projects->datatable($r)); }
-public function show(Project $project): JsonResponse { /* JSON for edit modal */ }
-public function save(SaveProjectRequest $r): JsonResponse {
-    $project = $this->projects->save($r->payload(), $r->filled('id') ? (int) $r->input('id') : null);
-    return response()->json(['message' => 'Project saved.', 'project' => [...]]);
-}
-public function destroy(Project $project): JsonResponse {
-    $this->authorize('delete', $project);  // policy
-    $this->projects->delete($project);
-    return response()->json(['message' => 'Project deleted.']);
+public function save(SaveMemberRequest $request): JsonResponse
+{
+    $orgId = (int) OrganizationContext::id();
+    $id = $request->filled('id') ? (int) $request->input('id') : null;
+
+    $user = $id !== null
+        ? User::where('organization_id', $orgId)->findOrFail($id)
+        : new User(['organization_id' => $orgId]);
+
+    $user->name = $request->string('name')->toString();
+    // ... assign the rest, then:
+    $user->save();
+    $user->assignPrimaryRole($request->string('role')->toString());
+
+    return response()->json(['message' => 'Member saved.', 'member' => ['id' => $user->id]]);
 }
 ```
 
-Route-model binding (`Project $project`) is **org-scoped** (docs/01), so a
-foreign id 404s.
+For a resource that owns its own table, route-model binding (`Widget $widget`)
+is **org-scoped** (docs/01), so a foreign id 404s, and `destroy` simply deletes
+through the repository.
 
 ### Routes — see [routing](02-routing-and-middleware.md)
 
-`index`+`listing` share `permission:projects.view`; `save` uses
-`permission:projects.create|projects.update`; `destroy` uses `projects.delete`.
+`index`+`listing` share `permission:members.view`; `save` uses
+`permission:members.create|members.update`; `impersonate` uses
+`members.impersonate`. A typical CRUD resource adds `destroy` under a
+`<resource>.delete` permission.
 
 ### Blade — listing table + one save modal
 
-`resources/views/tenant/projects/index.blade.php` is the canonical pattern:
+`resources/views/tenant/members/index.blade.php` is the canonical pattern:
 
-- A `<table id="projects-table">` hydrated by a server-side
-  `$('#projects-table').DataTable({ serverSide:true, ajax:{ url: listingUrl } })`.
-- **One** `#project-modal` form used for both create and edit — a hidden `id`
-  input decides. "New" clears it; the edit button GETs `show` and fills it.
+- A `<table>` hydrated by a server-side
+  `$('#members-table').DataTable({ serverSide:true, ajax:{ url: listingUrl } })`.
+- **One** save modal form used for both create and edit — a hidden `id`
+  input decides. "New" clears it; the edit button GETs `show` (or reads the row)
+  and fills it.
 - `axios.post(saveUrl, ...)` submits; **422** responses paint inline
   `.invalid-feedback` per field; success reloads the table and shows a SweetAlert.
-- Buttons gated with `@can('projects.create')` and JS flags
+- Buttons gated with `@can('members.create')` and JS flags
   (`canUpdate`/`canDelete` from `auth()->user()->can(...)`).
 
 The JS libs (jQuery, DataTables, Select2, SweetAlert2, axios) are **static
 files** under `public/organization/` — no build step (see [10](10-frontend-assets-and-pwa.md)).
 
-### The Member surface variant
+### Forcing a scope server-side
 
-The same `TaskRepository` powers the member panel, but the member controller
-**forces the `mine` scope** so an employee only sees their own tasks:
+When a surface must restrict rows to the current user (e.g. an employee seeing
+only their own records), force the scope **server-side** in the controller —
+never trust a client flag:
 
 ```php
-// app/Http/Controllers/Member/TaskController.php
 public function listing(Request $request): JsonResponse
 {
-    $request->merge(['mine' => true]);           // ignore client input
-    return response()->json($this->tasks->datatable($request));
-}
-public function updateStatus(UpdateTaskStatusRequest $request, Task $task): JsonResponse
-{
-    abort_unless($task->assigned_to === $request->user()?->id, 403, 'Not your task.');
-    // ...
+    $request->merge(['mine' => true]);   // ignore client input, force the scope
+    // ... build the DataTable from the now-forced filter
 }
 ```
 
 ---
 
-## Recipe — add a new resource module ("Invoices")
+## Recipe — add a new resource module ("Widgets")
 
-1. **Permissions:** add `'invoices' => ['view','create','update','delete']` to
+1. **Permissions:** add `'widgets' => ['view','create','update','delete']` to
    `PermissionCatalog::RESOURCES`, grant in `tenantMatrix()`, run
    `php artisan permissions:sync`, and re-provision org roles (see [RBAC](03-rbac.md)).
-2. **Migration:** create `invoices` with `foreignId('organization_id')->constrained()->cascadeOnDelete()`,
+2. **Migration:** create `widgets` with `foreignId('organization_id')->constrained()->cascadeOnDelete()`,
    your columns, `created_by`/`updated_by` nullable FKs, `timestamps()`,
    `softDeletes()`, and `unique(['organization_id','slug'])` if it has a slug.
-3. **Enum** (optional): `app/Enums/InvoiceStatus.php` with `label()/color()/options()`.
-4. **Model:** `app/Models/Invoice.php` with `use BelongsToOrganization;` (+
+3. **Enum** (optional): `app/Enums/WidgetStatus.php` with `label()/color()/options()`.
+4. **Model:** `app/Models/Widget.php` with `use BelongsToOrganization;` (+
    `FiltersByDateRange`), `$fillable` (no `organization_id`), enum casts,
    `getRouteKeyName()` if slug-routed, relations.
-5. **Interface + Repository:** mirror `ProjectRepositoryInterface` /
-   `ProjectRepository` (`datatable`, `save`, `find`, `delete`, dropdown methods).
-   Extend `BaseRepository`; add `HandlesSlugs` if slugged.
-6. **Bind** it: add `InvoiceRepositoryInterface::class => InvoiceRepository::class`
+5. **Interface + Repository:** mirror `LeadRepositoryInterface` /
+   `LeadRepository` (`datatable`, `save`/`create`, `find`, `delete`, dropdown
+   methods). Extend `BaseRepository`; add `HandlesSlugs` if slugged.
+6. **Bind** it: add `WidgetRepositoryInterface::class => WidgetRepository::class`
    to `$repositories` in `AppServiceProvider`.
-7. **FormRequest:** `SaveInvoiceRequest` with `authorize()` (create/update split),
-   `rules()` (prohibit `organization_id`/`created_by`/`updated_by`; org-scope any
-   FK with `Rule::exists()->where('organization_id', $orgId)`), and `payload()`.
-8. **Policy:** `InvoicePolicy` (ability checks); register it in `AuthServiceProvider::$policies`.
-9. **Controller:** `Tenant/InvoiceController` — `index`/`listing`/`show`/`save`/
+7. **FormRequest:** `SaveWidgetRequest` with `authorize()` (create/update split,
+   like `SaveMemberRequest`), `rules()` (prohibit `organization_id`/`created_by`/
+   `updated_by`; org-scope any FK with `Rule::exists()->where('organization_id', $orgId)`),
+   and a `payload()`/`safe()` accessor.
+8. **Authorization:** the FormRequest's `authorize()` covers create/update; gate
+   destructive actions in the controller (e.g. `$this->user()->can('widgets.delete')`).
+   Add a policy + register it in `AuthServiceProvider::$policies` only if you need
+   model-level checks.
+9. **Controller:** `Tenant/WidgetController` — `index`/`listing`/`show`/`save`/
    `destroy` (+ `dropdowns/*`), injecting the interface.
 10. **Routes:** add the controller group to `routes/tenant.php` with
-    `permission:invoices.view` on `index`/`listing`/`show`,
-    `permission:invoices.create|invoices.update` on `save`,
-    `permission:invoices.delete` on `destroy`.
-11. **Blade:** copy `tenant/projects/index.blade.php` → `tenant/invoices/index.blade.php`,
+    `permission:widgets.view` on `index`/`listing`/`show`,
+    `permission:widgets.create|widgets.update` on `save`,
+    `permission:widgets.delete` on `destroy`.
+11. **Blade:** copy `tenant/members/index.blade.php` → `tenant/widgets/index.blade.php`,
     swap route names, columns, and modal fields.
-12. **Factory:** `InvoiceFactory` for seeding/tests; add to `DemoOrganizationSeeder`
+12. **Factory:** `WidgetFactory` for seeding/tests; add to your demo seeder
     if you want demo data.
 
 ---
@@ -262,5 +310,5 @@ public function updateStatus(UpdateTaskStatusRequest $request, Task $task): Json
   DataTable falls back to id-desc). This prevents ordering by arbitrary columns.
 - Route-model binding only resolves records in the current org → expect **404**,
   not 403, on a foreign id.
-- For member-style "only mine" surfaces, force the scope **server-side**
+- For "only mine" surfaces, force the scope **server-side**
   (`$request->merge([...])`); don't trust a client flag.
