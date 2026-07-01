@@ -15,7 +15,7 @@ domain you're working in.
 | [03 — RBAC](03-rbac.md) | Roles & permissions (spatie teams keyed on org id). |
 | [04 — Auth & Onboarding](04-auth-and-onboarding.md) | Registration, login, approval lifecycle, impersonation. |
 | [05 — Settings](05-settings.md) | Per-org JSON settings + currency (`@money`). |
-| [06 — CRUD Module Convention](06-crud-module-convention.md) | **The core dev guide** — the Projects/Tasks vertical slice + "add a module" recipe. |
+| [06 — CRUD Module Convention](06-crud-module-convention.md) | **The core dev guide** — the Members/Customers vertical slice + "add a module" recipe. |
 | [07 — Dashboards & Reports](07-dashboards-and-reports.md) | Role dashboards + the pluggable report engine. |
 | [08 — Public Landing & Leads](08-public-landing-and-leads.md) | Marketing page + central lead capture/triage. |
 | [09 — Customer API](09-customer-api.md) | Stateless Sanctum API at `/api/v1/*`. |
@@ -30,8 +30,8 @@ domain you're working in.
    Public  ── / ─────────│ marketing landing + central lead capture  │
                          └───────────────────────────────────────────┘
    Super-admin ── /admin/* ── organizations, leads, platform reports  (no org context)
-   Tenant admin ── /tenant/* ─ projects, tasks, members, roles, settings, reports
-   Member      ── /member/* ── "my tasks" + reports
+   Tenant admin ── /tenant/* ─ customers, members, roles, settings, reports
+   Member      ── /member/* ── member dashboard + reports
    Customer    ── /api/v1/* ── stateless Sanctum JSON API
 ```
 
@@ -95,7 +95,7 @@ php artisan serve
 
 `migrate:fresh --seed` runs `DatabaseSeeder` → permission/role seeders +
 `DemoOrganizationSeeder` (the approved demo org **Acme Inc**, slug `acme`, with
-projects, tasks, and API customers). **Password for all accounts: `password`.**
+customers). **Password for all accounts: `password`.**
 
 | Email | Role | Lands on |
 | --- | --- | --- |

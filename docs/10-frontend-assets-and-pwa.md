@@ -14,7 +14,10 @@ The admin UI is the **Vuexy** Bootstrap 5 template. Critically, **the runtime
 loads pre-built static files** copied to `public/organization/` and referenced
 via `asset()`. There is no Vite/webpack step required to run the app — pages
 load plain `<script>`/`<link>` tags. jQuery powers DataTables and Select2;
-SweetAlert2 handles confirmations; axios does AJAX.
+**Notyf** is the global toast library (behind `window.notyf`); SweetAlert2
+handles confirm dialogs; axios does AJAX. The Vuexy **theme customizer** (skin /
+light-dark / primary colour / RTL) is enabled via `template-customizer.js` +
+Pickr.
 
 > A Vite config and `resources/js|css` exist for Tailwind-on-the-landing-side
 > tooling, but the **admin panels do not depend on a build** — they consume the
@@ -31,8 +34,9 @@ SweetAlert2 handles confirmations; axios does AJAX.
 | `resources/views/layouts/partials/head.blade.php` | CSS + axios + `app.js` + `window.appCurrency`. |
 | `resources/views/layouts/partials/scripts.blade.php` | jQuery/Bootstrap core + `@stack` hooks. |
 | `resources/views/layouts/partials/pwa-head.blade.php` | Manifest + service-worker registration. |
-| `public/organization/**` | Static Vuexy theme + libs (jQuery, DataTables, Select2, SweetAlert2, ApexCharts, axios). |
-| `public/organization/js/app.js` | CSRF-aware axios defaults + `window.formatMoney`. |
+| `public/organization/**` | Static Vuexy theme + libs (jQuery, DataTables, Select2, SweetAlert2, **Notyf**, **Pickr**, ApexCharts, axios) + `img/customizer/*.svg`. |
+| `public/organization/js/app.js` | CSRF axios defaults + `window.formatMoney` + `window.notyf` (toasts) + password eye-toggle. |
+| `public/organization/vendor/js/template-customizer.js` | Vuexy theme customizer; instantiated in `config.js` (`displayCustomizer: true`). |
 | `public/sw.js` | Service worker (tenant-safe caching). |
 | `public/manifest.webmanifest` | PWA manifest. |
 | `resources/views/vuexy-template/` | Upstream template **source**, kept for reference only. |
@@ -64,32 +68,44 @@ The layout head loads everything as plain static files under
 ```
 
 Per-page libraries are added with `@push('vendor-styles')` /
-`@push('vendor-scripts')` (e.g. DataTables + Select2 + SweetAlert2 on the
-Projects page), and page logic with `@push('scripts')` — see the canonical
-listing pattern in [CRUD convention](06-crud-module-convention.md).
+`@push('vendor-scripts')` (e.g. DataTables + SweetAlert2 on the Customers/Members
+pages), and page logic with `@push('scripts')` — see the canonical listing
+pattern in [CRUD convention](06-crud-module-convention.md). Notyf, Pickr and the
+theme customizer are loaded **globally** in the shared partials, so pages don't
+re-include them.
 
 `data-assets-path="{{ asset('organization/') }}/"` on `<html>` tells the Vuexy
 theme JS where to find its assets.
 
 ### 2. The app.js contract
 
-`public/organization/js/app.js` is loaded after axios and owns two
+`public/organization/js/app.js` is loaded after axios and owns four
 cross-cutting concerns:
 
 ```js
-// CSRF-aware axios defaults (reads <meta name="csrf-token">)
+// 1. CSRF-aware axios defaults (reads <meta name="csrf-token">)
 window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 
-// Client mirror of App\Support\Currency::format(), driven by window.appCurrency
-window.formatMoney = function (amount) {
-    var c = window.appCurrency || { symbol: '$', position: 'before', decimals: 2 };
-    var value = Number(amount || 0).toFixed(c.decimals == null ? 2 : c.decimals);
-    return c.position === 'after' ? value + c.symbol : c.symbol + value;
-};
+// 2. Client mirror of App\Support\Currency::format() (symbol, position,
+//    decimals, thousands/decimal separators — driven by window.appCurrency)
+window.formatMoney = function (amount) { /* number_format-style, with separators */ };
+
+// 3. Global toasts backed by the Notyf lib (alert() fallback). Lazily creates
+//    the Notyf instance on first use, so script order never matters.
+window.notyf = { success, failure, warning, info };
+
+// 4. Password show/hide toggle for any [data-password-toggle] eye icon
+//    (delegated on document, so it works inside dynamically-shown modals too).
 ```
 
 So `@money()` (server, see [settings](05-settings.md)) and `formatMoney()`
-(client) format currency identically per organization.
+(client) format currency identically per organization, and every surface uses
+`notyf.success(...)` / `notyf.failure(...)` for toasts.
+
+**Server-side flash → notyf.** `resources/views/layouts/partials/flash.blade.php`
+(included by every layout) turns `session('status')`, `session('error')` and
+validation errors into notyf toasts — so an invalid login etc. shows a toast
+with no per-page wiring.
 
 ### 3. PWA — manifest + tenant-safe service worker
 
@@ -136,8 +152,22 @@ served another tenant's HTML from cache.
 ### 4. The `vuexy-template/` source
 
 `resources/views/vuexy-template/` is the **upstream Vuexy template source**
-(SCSS, full lib set, build config) kept purely for reference. The running app
-uses only the extracted static assets in `public/organization/`.
+(SCSS, full lib set, build config) kept purely for reference — it's the folder
+you *copy from* when pulling a new lib into `public/organization/`. The running
+app never reads it: nothing references `vuexy-template` at runtime, every
+`asset()` path resolves under `public/`, and `public/organization/` is real
+files (not a symlink) — so the folder is safe to delete (you'd just lose the
+copy-from source for future libs).
+
+### 5. The theme customizer
+
+The Vuexy customizer (the gear panel: skin / light-dark / primary colour / RTL /
+layout) is wired in the shared partials: `template-customizer.js` in the head
+(after `helpers.js`, before `config.js`), Pickr's CSS in the head and JS in the
+footer, and its preview icons in `public/organization/img/customizer/*.svg`.
+`config.js` instantiates it (`displayCustomizer: true`). The auth layout loads it
+too (so the login theme stays in sync) but hides the panel via the
+`customizer-hide` class on `<html>`.
 
 ---
 
@@ -166,5 +196,10 @@ uses only the extracted static assets in `public/organization/`.
   every layout head or axios POSTs will 419.
 - `window.appCurrency` is injected per request from the current org's settings —
   client `formatMoney()` only matches the server when that injection is present.
-- Bump the SW cache name (`tailor-static-v1`) when you ship new static assets, or
-  clients may serve stale cached files.
+- Bump the **versioned** SW cache name (`tailor-static-v<N>` in `public/sw.js`)
+  whenever you change an existing cached asset (e.g. `app.js`), or returning
+  clients serve the stale cached copy. Adding brand-new files is a cache miss
+  (fetched fresh) and doesn't strictly need a bump.
+- **Toasts:** use `notyf.success('…')` / `notyf.failure('…')` (global, no
+  per-page include). Keep SweetAlert2 for confirm dialogs. The Notyf lib exposes
+  `window.Notyf` (a class); `app.js` wraps it — don't call it directly.

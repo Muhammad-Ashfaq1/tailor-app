@@ -59,10 +59,15 @@ $middleware->alias([
 ]);
 ```
 
-JSON error rendering is enabled for `api/*`:
+JSON error rendering is enabled for the API **and for any AJAX request that
+expects JSON** — the latter is what makes tenant axios forms receive a real
+`422` (inline `.invalid-feedback` / notyf) instead of a redirect. Plain browser
+form posts still fall through to the standard redirect-with-errors flow:
 
 ```php
-$exceptions->shouldRenderJsonWhen(fn (Request $request) => $request->is('api/*'));
+$exceptions->shouldRenderJsonWhen(
+    fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
+);
 ```
 
 ---

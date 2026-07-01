@@ -51,9 +51,8 @@ See also: [Tenancy](01-tenancy.md) · [Auth & onboarding](04-auth-and-onboarding
 ```php
 // app/Support/Permissions/PermissionCatalog.php
 private const RESOURCES = [
-    'projects'      => ['view', 'create', 'update', 'delete'],
-    'tasks'         => ['view', 'create', 'update', 'delete'],
     'members'       => ['view', 'create', 'update', 'delete', 'impersonate'],
+    'customers'     => ['view', 'create', 'update', 'delete'],
     'roles'         => ['view'],
     'settings'      => [],
     'reports'       => ['view'],
@@ -69,9 +68,9 @@ public static function tenantMatrix(): array
 {
     return [
         User::ROLE_TENANT_ADMIN => self::expand([...all tenant resources...]),
-        User::ROLE_MANAGER      => ['projects.view','projects.create',...,'reports.view'],
-        User::ROLE_MEMBER_LEAD  => ['projects.view','tasks.view',...,'reports.view'],
-        User::ROLE_MEMBER       => ['tasks.view','tasks.update','reports.view'],
+        User::ROLE_MANAGER      => ['members.view','customers.view','customers.create','customers.update','customers.delete','reports.view'],
+        User::ROLE_MEMBER_LEAD  => ['customers.view','reports.view'],
+        User::ROLE_MEMBER       => ['customers.view','reports.view'],
     ];
 }
 ```

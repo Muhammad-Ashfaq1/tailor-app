@@ -29,8 +29,7 @@ mid-session user (deactivated account, non-approved org).
 | --- | --- |
 | `app/Actions/Auth/RegisterOrganizationAction.php` | Creates pending org + inactive admin, provisions roles. |
 | `app/Http/Controllers/Auth/RegisterController.php` | Register form + store. |
-| `app/Http/Controllers/Auth/LoginController.php` | Layered login with block reasons. |
-| `app/Http/Controllers/Auth/LogoutController.php` | Invalidate session. |
+| `app/Http/Controllers/Auth/AuthController.php` | Login form + layered login + logout (one controller). |
 | `app/Http/Controllers/Auth/EmailVerificationController.php` | Notice / verify / resend. |
 | `app/Http/Controllers/Auth/PasswordResetController.php` | Forgot + reset. |
 | `app/Http/Controllers/Auth/ImpersonationController.php` | Shared stop-impersonating handler. |
@@ -81,17 +80,18 @@ notice.
 
 ### 2. Layered login
 
-`LoginController::store()` checks credentials manually, then walks the block
+`AuthController::login()` checks credentials manually, then walks the block
 reasons in order:
 
 ```php
-// app/Http/Controllers/Auth/LoginController.php
+// app/Http/Controllers/Auth/AuthController.php  (showLogin / login / logout)
 // 1. Credentials (Hash::check)
 // 2. Email verified?
 // 3. Organization approved? (pending/suspended/rejected → distinct message)
 // 4. is_active?
 Auth::login($user, $request->boolean('remember'));
-return redirect()->intended(route($user->defaultDashboardRouteName()));
+return redirect()->intended(route($user->defaultDashboardRouteName()))
+    ->with('status', "Welcome back, {$user->name}!"); // success toast on the dashboard
 ```
 
 `defaultDashboardRouteName()` sends them to `admin.dashboard`,
@@ -154,7 +154,7 @@ public function start(User $target): void
 ## How to extend
 
 - **Add a login gate** (e.g. "must accept ToS"): add a branch to
-  `LoginController::resolveLoginBlockMessage()`.
+  `AuthController::resolveLoginBlockMessage()`.
 - **Add a new org status transition side-effect**: extend
   `ChangeOrganizationStatusAction::handle()`.
 - **Change what a new org's first user gets**: edit `RegisterOrganizationAction`
