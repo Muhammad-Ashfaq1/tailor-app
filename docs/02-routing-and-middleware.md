@@ -48,6 +48,7 @@ $middleware->alias([
     'member.panel'      => EnsureMemberPanelAccess::class,    // member-tier roles only
     'impersonating'     => HandleImpersonation::class,        // share banner vars to views
     'org.init'          => InitializeTenancyFromAuthenticatedUser::class, // boot tenancy
+    'set.organization.locale' => SetOrganizationLocale::class, // apply org UI language (see docs/11)
     'org.approved'      => EnsureOrganizationApproved::class, // org must be Approved
     'super_admin'       => EnsureSuperAdmin::class,           // isSuperAdmin() gate
     'customer.org.init' => InitializeTenancyFromCustomer::class, // API tenancy
@@ -83,10 +84,10 @@ run after authentication.
 ['web', 'auth', 'active.user', 'central.user', 'super_admin', 'impersonating']
 
 // routes/tenant.php
-['web', 'auth', 'active.user', 'org.init', 'org.approved', 'impersonating']
+['web', 'auth', 'active.user', 'org.init', 'set.organization.locale', 'org.approved', 'impersonating']
 
 // routes/member.php
-['web', 'auth', 'active.user', 'org.init', 'org.approved', 'member.panel', 'impersonating']
+['web', 'auth', 'active.user', 'org.init', 'set.organization.locale', 'org.approved', 'member.panel', 'impersonating']
 ```
 
 What each custom guard does (all are `final readonly` single-method classes):
@@ -97,6 +98,7 @@ What each custom guard does (all are `final readonly` single-method classes):
 | `central.user` | `abort(403)` unless `organization_id === null`. |
 | `super_admin` | `abort(403)` unless `$user->isSuperAdmin()`. |
 | `org.init` | If the user has an org, `tenancy()->initialize($user->organization)`. |
+| `set.organization.locale` | Reads `regional.locale` from the current tenant, `App::setLocale()` (en/ar), stashes locale + direction in session. Runs right after `org.init`; central/admin falls back to `config('app.locale')`. See [11](11-localization-and-rtl.md). |
 | `org.approved` | Log out tenant users whose org is not `Approved`. |
 | `member.panel` | `abort(403)` unless `$user->isMemberTier()`. |
 | `impersonating` | Share `$isImpersonating` / `$impersonator` to all views (see [04](04-auth-and-onboarding.md)). |

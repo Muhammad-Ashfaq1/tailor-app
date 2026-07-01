@@ -93,11 +93,17 @@ in the JSON, and an optional cast. The special path `@name` writes the org's
     // …
 ],
 'regional' => [
+    'locale'            => ['rules' => ['required','in:en,ar'], 'path' => 'regional.locale'],
     'currency'          => ['rules' => ['required','string','size:3'], 'path' => 'regional.currency'],
     'currency_decimals' => ['rules' => ['required','integer','min:0','max:4'], 'path' => 'regional.currency_decimals', 'cast' => 'int'],
     // …
 ],
 ```
+
+`regional.locale` (`en`/`ar`) drives the whole UI language + RTL — the
+`set.organization.locale` middleware reads it per request. `regional.direction`
+is stored for completeness but is always derived from the locale at runtime. See
+[11 — Localization & RTL](11-localization-and-rtl.md).
 
 `SaveSettingsRequest` derives its rules from the section (`$this->route('section')`),
 and `SettingController::save()` casts each value, routes `@name` to the org name,

@@ -240,6 +240,10 @@ through the repository.
   `.invalid-feedback` per field; success reloads the table and shows a SweetAlert.
 - Buttons gated with `@can('members.create')` and JS flags
   (`canUpdate`/`canDelete` from `auth()->user()->can(...)`).
+- Modal fields use the shared `<x-form.input|select|textarea|password|switch>`
+  components (label + control + `.invalid-feedback` in one tag) and all visible
+  text is `{{ __('module.key') }}`. See [11 — Localization & RTL](11-localization-and-rtl.md)
+  for the components and the JS string bridge.
 
 The JS libs (jQuery, DataTables, Select2, SweetAlert2, axios) are **static
 files** under `public/organization/` — no build step (see [10](10-frontend-assets-and-pwa.md)).

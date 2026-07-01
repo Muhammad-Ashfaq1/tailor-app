@@ -33,47 +33,20 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="member-id">
-                    <div class="mb-3">
-                        <label class="form-label" for="member-name">{{ __('members.name') }}</label>
-                        <input type="text" class="form-control" id="member-name" name="name" required>
-                        <div class="invalid-feedback" data-field="name"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="member-email">{{ __('members.email') }}</label>
-                        <input type="email" class="form-control" id="member-email" name="email" required>
-                        <div class="invalid-feedback" data-field="email"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="member-role">{{ __('members.role') }}</label>
-                        <select class="form-select" id="member-role" name="role">
-                            @foreach ($roles as $role)
-                                <option value="{{ $role }}">{{ Str::headline($role) }}</option>
-                            @endforeach
-                        </select>
-                        <div class="invalid-feedback" data-field="role"></div>
-                    </div>
+                    <x-form.input name="name" id="member-name" :label="__('members.name')" required />
+                    <x-form.input name="email" id="member-email" type="email" :label="__('members.email')" required />
+                    <x-form.select name="role" id="member-role" :label="__('members.role')">
+                        @foreach ($roles as $role)
+                            <option value="{{ $role }}">{{ Str::headline($role) }}</option>
+                        @endforeach
+                    </x-form.select>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="member-password">{{ __('members.password') }} <small class="text-muted" id="pw-hint"></small></label>
-                            <div class="input-group input-group-merge has-validation">
-                                <input type="password" class="form-control" id="member-password" name="password">
-                                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
-                                <div class="invalid-feedback" data-field="password"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="member-password2">{{ __('members.confirm_password') }}</label>
-                            <div class="input-group input-group-merge">
-                                <input type="password" class="form-control" id="member-password2" name="password_confirmation">
-                                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
-                            </div>
-                        </div>
+                        <x-form.password name="password" id="member-password" :label="__('members.password')" wrapper="col-md-6 mb-3">
+                            <x-slot:hint><small class="text-muted" id="pw-hint"></small></x-slot:hint>
+                        </x-form.password>
+                        <x-form.password name="password_confirmation" id="member-password2" :label="__('members.confirm_password')" :feedback="false" wrapper="col-md-6 mb-3" />
                     </div>
-                    <input type="hidden" name="is_active" value="0">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="member-active" name="is_active" value="1" checked>
-                        <label class="form-check-label" for="member-active">{{ __('members.active') }}</label>
-                    </div>
+                    <x-form.switch id="member-active" :label="__('members.active')" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">{{ __('app.cancel') }}</button>

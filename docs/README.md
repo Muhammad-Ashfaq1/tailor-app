@@ -20,6 +20,7 @@ domain you're working in.
 | [08 — Public Landing & Leads](08-public-landing-and-leads.md) | Marketing page + central lead capture/triage. |
 | [09 — Customer API](09-customer-api.md) | Stateless Sanctum API at `/api/v1/*`. |
 | [10 — Frontend, Assets & PWA](10-frontend-assets-and-pwa.md) | Static-asset delivery (no build step) + service worker. |
+| [11 — Localization & RTL](11-localization-and-rtl.md) | English/Arabic UI, per-org locale, RTL, enum labels, `x-form.*` components. |
 
 ---
 

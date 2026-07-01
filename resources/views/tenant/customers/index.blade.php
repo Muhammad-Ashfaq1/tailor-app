@@ -28,81 +28,38 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="customer-id">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-name">{{ __('customers.name') }}</label>
-                            <input type="text" class="form-control" id="customer-name" name="name" required>
-                            <div class="invalid-feedback" data-field="name"></div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-phone">{{ __('customers.phone') }}</label>
-                            <input type="text" class="form-control" id="customer-phone" name="phone">
-                            <div class="invalid-feedback" data-field="phone"></div>
-                        </div>
+                        <x-form.input name="name" id="customer-name" :label="__('customers.name')" wrapper="col-md-6 mb-3" required />
+                        <x-form.input name="phone" id="customer-phone" :label="__('customers.phone')" wrapper="col-md-6 mb-3" />
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-type">{{ __('customers.type') }}</label>
-                            <select class="form-select" id="customer-type" name="type">
-                                @foreach ($types as $type)
-                                    <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-field="type"></div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-email">{{ __('customers.email') }} <small class="text-muted">{{ __('customers.email_hint') }}</small></label>
-                            <input type="email" class="form-control" id="customer-email" name="email">
-                            <div class="invalid-feedback" data-field="email"></div>
-                        </div>
+                        <x-form.select name="type" id="customer-type" :label="__('customers.type')" wrapper="col-md-6 mb-3">
+                            @foreach ($types as $type)
+                                <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
+                            @endforeach
+                        </x-form.select>
+                        <x-form.input name="email" id="customer-email" type="email" :label="__('customers.email')" wrapper="col-md-6 mb-3">
+                            <x-slot:hint><small class="text-muted">{{ __('customers.email_hint') }}</small></x-slot:hint>
+                        </x-form.input>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-credit-type">{{ __('customers.credit_reward') }}</label>
-                            <select class="form-select" id="customer-credit-type" name="credit_type">
-                                @foreach ($creditTypes as $ct)
-                                    <option value="{{ $ct['value'] }}">{{ $ct['label'] }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-field="credit_type"></div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-credit-value">{{ __('customers.credit_value') }} <small class="text-muted" id="credit-hint"></small></label>
-                            <input type="number" step="0.01" min="0" class="form-control" id="customer-credit-value" name="credit_value" value="0">
-                            <div class="invalid-feedback" data-field="credit_value"></div>
-                        </div>
+                        <x-form.select name="credit_type" id="customer-credit-type" :label="__('customers.credit_reward')" wrapper="col-md-6 mb-3">
+                            @foreach ($creditTypes as $ct)
+                                <option value="{{ $ct['value'] }}">{{ $ct['label'] }}</option>
+                            @endforeach
+                        </x-form.select>
+                        <x-form.input name="credit_value" id="customer-credit-value" type="number" step="0.01" min="0" value="0" :label="__('customers.credit_value')" wrapper="col-md-6 mb-3">
+                            <x-slot:hint><small class="text-muted" id="credit-hint"></small></x-slot:hint>
+                        </x-form.input>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="customer-address">{{ __('customers.address') }}</label>
-                        <textarea class="form-control" id="customer-address" name="address" rows="2"></textarea>
-                        <div class="invalid-feedback" data-field="address"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="customer-notes">{{ __('customers.notes') }}</label>
-                        <textarea class="form-control" id="customer-notes" name="notes" rows="2"></textarea>
-                        <div class="invalid-feedback" data-field="notes"></div>
-                    </div>
+                    <x-form.textarea name="address" id="customer-address" :label="__('customers.address')" />
+                    <x-form.textarea name="notes" id="customer-notes" :label="__('customers.notes')" />
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-password">{{ __('customers.app_password') }} <small class="text-muted">{{ __('customers.app_password_hint') }}</small></label>
-                            <div class="input-group input-group-merge has-validation">
-                                <input type="password" class="form-control" id="customer-password" name="password" autocomplete="new-password">
-                                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
-                                <div class="invalid-feedback" data-field="password"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="customer-password2">{{ __('customers.confirm_password') }}</label>
-                            <div class="input-group input-group-merge">
-                                <input type="password" class="form-control" id="customer-password2" name="password_confirmation" autocomplete="new-password">
-                                <span class="input-group-text cursor-pointer" data-password-toggle><i class="icon-base ti tabler-eye-off"></i></span>
-                            </div>
-                        </div>
+                        <x-form.password name="password" id="customer-password" :label="__('customers.app_password')" wrapper="col-md-6 mb-3">
+                            <x-slot:hint><small class="text-muted">{{ __('customers.app_password_hint') }}</small></x-slot:hint>
+                        </x-form.password>
+                        <x-form.password name="password_confirmation" id="customer-password2" :label="__('customers.confirm_password')" :feedback="false" wrapper="col-md-6 mb-3" />
                     </div>
-                    <input type="hidden" name="is_active" value="0">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="customer-active" name="is_active" value="1" checked>
-                        <label class="form-check-label" for="customer-active">{{ __('customers.active') }}</label>
-                    </div>
+                    <x-form.switch id="customer-active" :label="__('customers.active')" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">{{ __('app.cancel') }}</button>

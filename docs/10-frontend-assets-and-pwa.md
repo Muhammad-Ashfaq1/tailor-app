@@ -31,8 +31,10 @@ Pickr.
 | --- | --- |
 | `resources/views/layouts/app.blade.php` | Main admin shell (sidebar/navbar/content). |
 | `resources/views/layouts/member-portal.blade.php` | Member panel shell. |
-| `resources/views/layouts/partials/head.blade.php` | CSS + axios + `app.js` + `window.appCurrency`. |
-| `resources/views/layouts/partials/scripts.blade.php` | jQuery/Bootstrap core + `@stack` hooks. |
+| `resources/views/layouts/partials/head.blade.php` | CSS + axios + `app.js` + `window.appCurrency` + `window.AppTranslations` bridge + conditional `custom-rtl.css` (Arabic). |
+| `resources/views/layouts/partials/scripts.blade.php` | jQuery/Bootstrap core + `@stack` hooks + localized DataTables/Select2 defaults. |
+| `resources/views/components/form/*.blade.php` | Shared `x-form.*` field components (see [11](11-localization-and-rtl.md)). |
+| `public/organization/css/custom-rtl.css` | Hand-written RTL overrides, loaded only for the Arabic locale (no Vuexy RTL build). |
 | `resources/views/layouts/partials/pwa-head.blade.php` | Manifest + service-worker registration. |
 | `public/organization/**` | Static Vuexy theme + libs (jQuery, DataTables, Select2, SweetAlert2, **Notyf**, **Pickr**, ApexCharts, axios) + `img/customizer/*.svg`. |
 | `public/organization/js/app.js` | CSRF axios defaults + `window.formatMoney` + `window.notyf` (toasts) + password eye-toggle. |

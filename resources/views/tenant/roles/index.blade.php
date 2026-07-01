@@ -32,12 +32,9 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="role-id">
-                    <div class="mb-3">
-                        <label class="form-label" for="role-name">{{ __('roles.role_name') }}</label>
-                        <input type="text" class="form-control" id="role-name" name="name" required>
+                    <x-form.input name="name" id="role-name" :label="__('roles.role_name')" required>
                         <div class="form-text" id="role-protected-note" style="display:none">{{ __('roles.protected_note') }}</div>
-                        <div class="invalid-feedback" data-field="name"></div>
-                    </div>
+                    </x-form.input>
                     <label class="form-label">{{ __('roles.permissions') }}</label>
                     <div class="row">
                         @foreach ($permissionGroups as $resource => $permissions)

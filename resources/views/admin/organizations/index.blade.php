@@ -30,20 +30,12 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="org-id">
-                    <div class="mb-3">
-                        <label class="form-label" for="org-name">{{ __('organizations.name') }}</label>
-                        <input type="text" class="form-control" id="org-name" name="name" required>
-                        <div class="invalid-feedback" data-field="name"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="org-status">{{ __('organizations.status_label') }}</label>
-                        <select class="form-select" id="org-status" name="status">
-                            @foreach ($statuses as $status)
-                                <option value="{{ $status['value'] }}">{{ $status['label'] }}</option>
-                            @endforeach
-                        </select>
-                        <div class="invalid-feedback" data-field="status"></div>
-                    </div>
+                    <x-form.input name="name" id="org-name" :label="__('organizations.name')" required />
+                    <x-form.select name="status" id="org-status" :label="__('organizations.status_label')">
+                        @foreach ($statuses as $status)
+                            <option value="{{ $status['value'] }}">{{ $status['label'] }}</option>
+                        @endforeach
+                    </x-form.select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">{{ __('app.cancel') }}</button>
