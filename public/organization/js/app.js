@@ -16,9 +16,12 @@
 
     // Mirror of App\Support\Currency::format() for client-side rendering.
     window.formatMoney = function (amount) {
-        var c = window.appCurrency || { symbol: '$', position: 'before', decimals: 2 };
-        var value = Number(amount || 0).toFixed(c.decimals == null ? 2 : c.decimals);
-        return c.position === 'after' ? value + c.symbol : c.symbol + value;
+        var c = window.appCurrency || { symbol: '$', position: 'before', decimals: 2, thousands_separator: ',', decimal_separator: '.' };
+        var decimals = c.decimals == null ? 2 : c.decimals;
+        var parts = Number(amount || 0).toFixed(decimals).split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, c.thousands_separator || ',');
+        var value = parts.join(c.decimal_separator || '.');
+        return c.position === 'after' ? value + ' ' + c.symbol : c.symbol + ' ' + value;
     };
 
     /*

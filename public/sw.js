@@ -4,7 +4,7 @@
  | is NETWORK-FIRST and never cached, so one tenant can never be served
  | another tenant's HTML from cache.
  */
-const STATIC_CACHE = 'tailor-static-v4';
+const STATIC_CACHE = 'tailor-static-v5';
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();

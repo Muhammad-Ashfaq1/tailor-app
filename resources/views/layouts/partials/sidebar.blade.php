@@ -7,7 +7,7 @@
     </div>
     <div class="menu-inner-shadow"></div>
 
-    <ul class="menu-inner py-1">
+    <ul class="menu-inner py-1 d-flex flex-column">
         @if ($user->isSuperAdmin())
             {{-- ---------------- Super-admin menu ---------------- --}}
             <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -73,7 +73,8 @@
                 </a>
             </li>
             @can('settings.manage')
-                <li class="menu-item {{ request()->routeIs('tenant.settings.*') ? 'active' : '' }}">
+                {{-- Pinned to the very bottom of the sidebar. --}}
+                <li class="menu-item mt-auto {{ request()->routeIs('tenant.settings.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.settings.index') }}" class="menu-link">
                         <i class="menu-icon icon-base ti tabler-settings"></i>
                         <div>Settings</div>

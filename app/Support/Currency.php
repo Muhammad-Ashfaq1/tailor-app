@@ -17,7 +17,7 @@ final class Currency
 {
     private static ?array $cache = null;
 
-    /** @return array{currency:string,symbol:string,position:string,decimals:int} */
+    /** @return array{currency:string,symbol:string,position:string,decimals:int,thousands_separator:string,decimal_separator:string} */
     public static function config(): array
     {
         if (self::$cache !== null) {
@@ -38,18 +38,20 @@ final class Currency
             'currency' => $regional['currency'] ?? 'USD',
             'symbol' => $regional['currency_symbol'] ?? '$',
             'position' => $regional['currency_position'] ?? 'before',
-            'decimals' => 2,
+            'decimals' => (int) ($regional['currency_decimals'] ?? 2),
+            'thousands_separator' => (string) ($regional['thousands_separator'] ?? ','),
+            'decimal_separator' => (string) ($regional['decimal_separator'] ?? '.'),
         ];
     }
 
     public static function format(float|int|string|null $amount): string
     {
         $c = self::config();
-        $value = number_format((float) $amount, $c['decimals']);
+        $value = number_format((float) $amount, $c['decimals'], $c['decimal_separator'], $c['thousands_separator']);
 
         return $c['position'] === 'after'
-            ? $value.$c['symbol']
-            : $c['symbol'].$value;
+            ? $value.' '.$c['symbol']
+            : $c['symbol'].' '.$value;
     }
 
     /** JSON-safe config exposed to the browser as window.appCurrency. */

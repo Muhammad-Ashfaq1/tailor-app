@@ -50,10 +50,11 @@ Route::middleware(['web', 'auth', 'active.user', 'org.init', 'org.approved', 'im
             Route::delete('/{role}', 'destroy')->middleware('permission:roles.manage')->name('destroy');
         });
 
-        // Settings (sections gated by settings.manage).
+        // Settings (route-based tabs; all gated by settings.manage).
         Route::controller(SettingController::class)->prefix('settings')->name('settings.')->middleware('permission:settings.manage')->group(function (): void {
-            Route::get('/{section?}', 'index')->name('index');
-            Route::post('/{section}', 'save')->name('save');
+            Route::post('/notifications', 'saveNotifications')->name('notifications.save');
+            Route::post('/save/{section}', 'save')->name('save');
+            Route::get('/{page?}', 'index')->name('index');
         });
 
         // Tenant analytics reports.

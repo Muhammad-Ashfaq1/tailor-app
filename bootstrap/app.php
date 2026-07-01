@@ -64,7 +64,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // JSON error responses (incl. 422 validation) for the API and for any
+        // AJAX request that expects JSON — the latter powers every tenant
+        // axios form (inline .invalid-feedback / notyf). Plain browser form
+        // posts still fall through to the standard redirect-with-errors flow.
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
