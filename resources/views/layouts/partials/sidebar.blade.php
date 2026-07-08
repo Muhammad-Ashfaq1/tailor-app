@@ -50,6 +50,14 @@
                     </a>
                 </li>
             @endcan
+            @can('customer_discount_groups.view')
+                <li class="menu-item {{ request()->routeIs('tenant.customer-discount-groups.*') ? 'active' : '' }}">
+                    <a href="{{ route('tenant.customer-discount-groups.index') }}" class="menu-link">
+                        <i class="menu-icon icon-base ti tabler-rosette-discount"></i>
+                        <div>{{ __('menu.customer_discount_groups') }}</div>
+                    </a>
+                </li>
+            @endcan
             @can('members.view')
                 <li class="menu-item {{ request()->routeIs('tenant.members.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.members.index') }}" class="menu-link">

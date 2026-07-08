@@ -30,6 +30,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $notes
  * @property string|null $email
  * @property bool $is_active
+ * @property int|null $discount_group_id
  */
 class Customer extends Authenticatable
 {
@@ -52,6 +53,7 @@ class Customer extends Authenticatable
         'email',
         'password',
         'is_active',
+        'discount_group_id',
         'created_by',
         'updated_by',
     ];
@@ -69,7 +71,13 @@ class Customer extends Authenticatable
             'type' => CustomerType::class,
             'credit_type' => CustomerCreditType::class,
             'credit_value' => 'decimal:2',
+            'discount_group_id' => 'integer',
         ];
+    }
+
+    public function discountGroup(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(CustomerDiscountGroup::class, 'discount_group_id');
     }
 
     protected static function newFactory(): CustomerFactory

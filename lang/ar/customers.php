@@ -18,6 +18,8 @@ return [
     'type' => 'النوع',
     'email' => 'البريد الإلكتروني',
     'email_hint' => '(اختياري — للدخول عبر التطبيق)',
+    'discount_group' => 'مجموعة الخصم',
+    'no_discount_group' => 'بلا مجموعة خصم',
     'credit' => 'الرصيد',
     'credit_reward' => 'مكافأة رصيد',
     'credit_type' => 'مكافأة رصيد',

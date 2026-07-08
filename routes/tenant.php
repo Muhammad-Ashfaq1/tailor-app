@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Tenant\CustomerController;
+use App\Http\Controllers\Tenant\CustomerDiscountGroupController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\RoleController;
@@ -14,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Tenant admin / manager routes — /tenant/*
 |--------------------------------------------------------------------------
+|
 | Group middleware: auth + active + org.init (tenancy) + locale + org.approved + banner.
 | Per-route permission middleware is added on top (OR-form where relevant).
+|
 */
 
 Route::middleware(['web', 'auth', 'active.user', 'org.init', 'set.organization.locale', 'org.approved', 'impersonating'])
@@ -40,6 +43,15 @@ Route::middleware(['web', 'auth', 'active.user', 'org.init', 'set.organization.l
             Route::get('/{id}', 'show')->middleware('permission:customers.view')->name('show')->whereNumber('id');
             Route::post('/save', 'save')->middleware('permission:customers.create|customers.update')->name('save');
             Route::delete('/{id}', 'destroy')->middleware('permission:customers.delete')->name('destroy')->whereNumber('id');
+        });
+
+        // Customer discount groups management.
+        Route::controller(CustomerDiscountGroupController::class)->prefix('customer-discount-groups')->name('customer-discount-groups.')->group(function (): void {
+            Route::get('/', 'index')->middleware('permission:customer_discount_groups.view')->name('index');
+            Route::get('/listing', 'listing')->middleware('permission:customer_discount_groups.view')->name('listing');
+            Route::get('/{id}', 'show')->middleware('permission:customer_discount_groups.view')->name('show')->whereNumber('id');
+            Route::post('/save', 'save')->middleware('permission:customer_discount_groups.create|customer_discount_groups.update')->name('save');
+            Route::delete('/{id}', 'destroy')->middleware('permission:customer_discount_groups.delete')->name('destroy')->whereNumber('id');
         });
 
         // Roles & permissions UI.

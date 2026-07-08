@@ -8,6 +8,8 @@ use App\Repositories\CustomerRepository;
 use App\Repositories\Interface\CustomerRepositoryInterface;
 use App\Repositories\Interface\LeadRepositoryInterface;
 use App\Repositories\LeadRepository;
+use App\Repositories\CustomerDiscountGroupRepository;
+use App\Repositories\Interface\CustomerDiscountGroupRepositoryInterface;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     private array $repositories = [
         LeadRepositoryInterface::class => LeadRepository::class,
         CustomerRepositoryInterface::class => CustomerRepository::class,
+        CustomerDiscountGroupRepositoryInterface::class => CustomerDiscountGroupRepository::class,
     ];
 
     public function register(): void

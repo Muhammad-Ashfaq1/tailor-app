@@ -13,7 +13,7 @@
         </div>
         <div class="card-datatable table-responsive p-3">
             <table class="table" id="customers-table" style="width:100%">
-                <thead><tr><th>{{ __('customers.name') }}</th><th>{{ __('customers.phone') }}</th><th>{{ __('customers.type') }}</th><th>{{ __('customers.credit') }}</th><th>{{ __('customers.status') }}</th><th class="text-end">{{ __('app.actions') }}</th></tr></thead>
+                <thead><tr><th>{{ __('customers.name') }}</th><th>{{ __('customers.phone') }}</th><th>{{ __('customers.type') }}</th><th>{{ __('customers.discount_group') }}</th><th>{{ __('customers.credit') }}</th><th>{{ __('customers.status') }}</th><th class="text-end">{{ __('app.actions') }}</th></tr></thead>
             </table>
         </div>
     </div>
@@ -40,6 +40,14 @@
                         <x-form.input name="email" id="customer-email" type="email" :label="__('customers.email')" :placeholder="__('customers.ph_email')" wrapper="col-md-6 mb-3">
                             <x-slot:hint><small class="text-muted">{{ __('customers.email_hint') }}</small></x-slot:hint>
                         </x-form.input>
+                    </div>
+                    <div class="row">
+                        <x-form.select name="discount_group_id" id="customer-discount-group" :label="__('customers.discount_group')" wrapper="col-md-12 mb-3">
+                            <option value="">{{ __('customers.no_discount_group') }}</option>
+                            @foreach ($discountGroups as $dg)
+                                <option value="{{ $dg->id }}">{{ $dg->name }} ({{ number_format($dg->discount_percentage, 0) }}%)</option>
+                            @endforeach
+                        </x-form.select>
                     </div>
                     <div class="row">
                         <x-form.select name="credit_type" id="customer-credit-type" :label="__('customers.credit_reward')" wrapper="col-md-6 mb-3">
@@ -106,6 +114,7 @@
             { data: 'name' },
             { data: 'phone', render: v => v || '<span class="text-muted">—</span>' },
             { data: 'type_label', render: (v, t, row) => `<span class="badge bg-label-${row.type_color}">${v}</span>` },
+            { data: 'discount_group_name', render: v => v ? `<span class="badge bg-label-primary">${v}</span>` : '<span class="text-muted">—</span>' },
             { data: 'credit_value', orderable: false, searchable: false, render: (v, t, row) => creditCell(row) },
             { data: 'is_active', render: v => v ? `<span class="badge bg-label-success">${window.AppTranslations.active}</span>` : `<span class="badge bg-label-secondary">${window.AppTranslations.inactive}</span>` },
             { data: 'id', orderable: false, searchable: false, className: 'text-end', render: (id, t, row) => {
@@ -142,6 +151,7 @@
             document.getElementById('customer-phone').value = data.phone || '';
             document.getElementById('customer-email').value = data.email || '';
             document.getElementById('customer-type').value = data.type;
+            document.getElementById('customer-discount-group').value = data.discount_group_id || '';
             document.getElementById('customer-credit-type').value = data.credit_type;
             document.getElementById('customer-credit-value').value = data.credit_value ?? 0;
             document.getElementById('customer-address').value = data.address || '';

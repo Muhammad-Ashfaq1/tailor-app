@@ -8,6 +8,7 @@ return [
     'leads' => 'Leads',
     'reports' => 'Reports',
     'customers' => 'Customers',
+    'customer_discount_groups' => 'Customer Discount Group',
     'members' => 'Members',
     'roles' => 'Roles & Permissions',
     'settings' => 'Settings',

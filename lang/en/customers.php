@@ -18,6 +18,8 @@ return [
     'type' => 'Type',
     'email' => 'Email',
     'email_hint' => '(optional — for app login)',
+    'discount_group' => 'Discount Group',
+    'no_discount_group' => 'No Discount Group',
     'credit' => 'Credit',
     'credit_reward' => 'Credit reward',
     'credit_type' => 'Credit reward',

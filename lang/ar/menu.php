@@ -8,6 +8,7 @@ return [
     'leads' => 'العملاء المحتملون',
     'reports' => 'التقارير',
     'customers' => 'العملاء',
+    'customer_discount_groups' => 'مجموعات خصم العملاء',
     'members' => 'الأعضاء',
     'roles' => 'الأدوار والصلاحيات',
     'settings' => 'الإعدادات',

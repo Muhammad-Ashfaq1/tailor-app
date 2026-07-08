@@ -42,6 +42,12 @@ class SaveCustomerRequest extends FormRequest
             'credit_type' => ['required', Rule::enum(CustomerCreditType::class)],
             'credit_value' => ['nullable', 'numeric', 'min:0', 'max:9999999.99'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'discount_group_id' => [
+                'nullable', 'integer',
+                Rule::exists('customer_discount_groups', 'id')
+                    ->where('organization_id', $orgId)
+                    ->whereNull('deleted_at'),
+            ],
             // Email is optional, but unique per organization when supplied.
             'email' => [
                 'nullable', 'email', 'max:255',
@@ -78,6 +84,7 @@ class SaveCustomerRequest extends FormRequest
             'email' => __('customers.email'),
             'is_active' => __('customers.status'),
             'password' => __('customers.app_password'),
+            'discount_group_id' => __('customers.discount_group'),
         ];
     }
 
@@ -94,6 +101,7 @@ class SaveCustomerRequest extends FormRequest
         ]) + [
             'is_active' => $this->boolean('is_active'),
             'credit_value' => (float) ($this->input('credit_value') ?? 0),
+            'discount_group_id' => $this->filled('discount_group_id') ? (int) $this->input('discount_group_id') : null,
         ];
     }
 }

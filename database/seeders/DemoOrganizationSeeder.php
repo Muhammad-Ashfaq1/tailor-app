@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Actions\Organizations\ProvisionOrganizationRoles;
 use App\Enums\OrganizationStatus;
 use App\Models\Customer;
+use App\Models\CustomerDiscountGroup;
 use App\Models\Lead;
 use App\Models\Organization;
 use App\Models\User;
@@ -36,9 +37,45 @@ class DemoOrganizationSeeder extends Seeder
         // Org-scoped data — initialize tenancy so org_id auto-fills.
         tenancy()->initialize($organization);
 
-        // Demo API customers (org-scoped).
-        if (class_exists(Customer::class)) {
-            Customer::factory()->count(3)->create();
+        // Demo discount groups (org-scoped).
+        if (class_exists(CustomerDiscountGroup::class)) {
+            $gold = CustomerDiscountGroup::factory()->create([
+                'organization_id' => $organization->id,
+                'name' => 'VIP Gold',
+                'discount_percentage' => 15.00,
+                'description' => 'Gold level customers - 15% discount',
+            ]);
+            $silver = CustomerDiscountGroup::factory()->create([
+                'organization_id' => $organization->id,
+                'name' => 'Silver',
+                'discount_percentage' => 10.00,
+                'description' => 'Regular loyal customers - 10% discount',
+            ]);
+            $bronze = CustomerDiscountGroup::factory()->create([
+                'organization_id' => $organization->id,
+                'name' => 'Bronze',
+                'discount_percentage' => 5.00,
+                'description' => 'Bronze tier - 5% discount',
+            ]);
+
+            // Demo API customers (org-scoped).
+            if (class_exists(Customer::class)) {
+                Customer::factory()->create([
+                    'organization_id' => $organization->id,
+                    'discount_group_id' => $gold->id,
+                    'name' => 'John Doe',
+                ]);
+                Customer::factory()->create([
+                    'organization_id' => $organization->id,
+                    'discount_group_id' => $silver->id,
+                    'name' => 'Jane Smith',
+                ]);
+                Customer::factory()->create([
+                    'organization_id' => $organization->id,
+                    'discount_group_id' => null,
+                    'name' => 'Bob Johnson',
+                ]);
+            }
         }
 
         tenancy()->end();

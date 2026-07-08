@@ -9,6 +9,7 @@ use App\Enums\CustomerType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveCustomerRequest;
 use App\Repositories\Interface\CustomerRepositoryInterface;
+use App\Repositories\Interface\CustomerDiscountGroupRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ final readonly class CustomerController extends Controller
 {
     public function __construct(
         private CustomerRepositoryInterface $customers,
+        private CustomerDiscountGroupRepositoryInterface $discountGroups,
     ) {}
 
     public function index(): View
@@ -29,6 +31,7 @@ final readonly class CustomerController extends Controller
         return view('tenant.customers.index', [
             'types' => CustomerType::options(),
             'creditTypes' => CustomerCreditType::options(),
+            'discountGroups' => $this->discountGroups->allActive(),
         ]);
     }
 
@@ -50,6 +53,7 @@ final readonly class CustomerController extends Controller
             'type' => $customer->type->value,
             'credit_type' => $customer->credit_type->value,
             'credit_value' => $customer->credit_value,
+            'discount_group_id' => $customer->discount_group_id,
             'notes' => $customer->notes,
             'email' => $customer->email,
             'is_active' => $customer->is_active,
