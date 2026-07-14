@@ -19,6 +19,8 @@ return [
     'wallet' => 'Wallet',
     'employees' => 'Employees',
     'expenses' => 'Expenses',
+    'discounts' => 'Discounts',
+    'discount_groups' => 'Discount groups',
 
     // Navbar / user menu
     'profile' => 'Profile',

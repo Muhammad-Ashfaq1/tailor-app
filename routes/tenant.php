@@ -8,6 +8,7 @@ use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\RoleController;
 use App\Http\Controllers\Tenant\SettingController;
+use App\Http\Controllers\Tenant\DiscountGroupController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,14 @@ Route::middleware(['web', 'auth', 'active.user', 'org.init', 'set.organization.l
     ->group(function (): void {
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::controller(DiscountGroupController::class)->prefix('discount-groups')->name('discount-groups.')->group(function (): void {
+            Route::get('/', 'index')->middleware('permission:discount-groups.view')->name('index');
+            Route::get('/listing', 'listing')->middleware('permission:discount-groups.view')->name('listing');
+            Route::get('/{discountGroup}', 'show')->middleware('permission:discount-groups.view')->name('show');
+            Route::post('/save/{discountGroup?}', 'save')->middleware('permission:discount-groups.create|discount-groups.update')->name('save');
+            Route::delete('/{discountGroup}', 'destroy')->middleware('permission:discount-groups.delete')->name('destroy');
+        });
 
         // Members (tenant users) management + impersonation.
         Route::controller(MemberController::class)->prefix('members')->name('members.')->group(function (): void {

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Database\Seeders\PermissionSeeder;
+use App\Models\Organization;
+use App\Actions\Organizations\ProvisionOrganizationRoles;
 use Illuminate\Console\Command;
 
 /**
@@ -22,6 +24,13 @@ class SyncPermissions extends Command
         $this->info('Syncing permissions from the catalog…');
 
         $this->callSilent('db:seed', ['--class' => PermissionSeeder::class, '--force' => true]);
+
+        // Existing organizations also need their role permission matrix
+        // refreshed; otherwise newly-added sidebar permissions remain absent
+        // from roles created before the module was installed.
+        Organization::query()->each(function (Organization $organization): void {
+            app(ProvisionOrganizationRoles::class)->handle((int) $organization->id);
+        });
 
         $this->info('Permissions synced.');
 

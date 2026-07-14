@@ -23,6 +23,7 @@ final class PermissionCatalog
         // Tenant resources.
         'members' => ['view', 'create', 'update', 'delete', 'impersonate'],
         'customers' => ['view', 'create', 'update', 'delete'],
+        'discount-groups' => ['view', 'create', 'update', 'delete'],
         'roles' => ['view'],
         'settings' => [],
         'reports' => ['view'],
@@ -58,11 +59,12 @@ final class PermissionCatalog
     {
         return [
             User::ROLE_TENANT_ADMIN => self::expand([
-                'members' => '*', 'customers' => '*', 'roles' => '*', 'settings' => '*', 'reports' => '*',
+                'members' => '*', 'customers' => '*', 'discount-groups' => '*', 'roles' => '*', 'settings' => '*', 'reports' => '*',
             ]),
             User::ROLE_MANAGER => [
                 'members.view',
                 'customers.view', 'customers.create', 'customers.update', 'customers.delete',
+                'discount-groups.view', 'discount-groups.create', 'discount-groups.update', 'discount-groups.delete',
                 'reports.view',
             ],
             User::ROLE_MEMBER_LEAD => [

@@ -1,4 +1,29 @@
 @php($user = auth()->user())
+@once
+    <style>
+        #layout-menu .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        #layout-menu .menu-link .menu-icon {
+            flex: 0 0 1.375rem;
+        }
+
+        #layout-menu .menu-sub>.menu-item>.menu-link::before {
+            display: none;
+        }
+
+        #layout-menu .menu-sub .menu-link {
+            padding-inline-start: 1rem;
+        }
+
+        #layout-menu .menu-sub .menu-icon {
+            opacity: 0.9;
+        }
+    </style>
+@endonce
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="{{ url('/') }}" class="app-brand-link">
@@ -50,6 +75,25 @@
                     </a>
                 </li>
             @endcan
+            @if ($user->can('discount-groups.view'))
+                @php($discountsOpen = request()->routeIs('tenant.discount-groups.*'))
+                <li class="menu-item {{ $discountsOpen ? 'active open' : '' }}">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon icon-base ti tabler-ticket"></i>
+                        <div>{{ __('menu.discounts') }}</div>
+                    </a>
+                    <ul class="menu-sub">
+                        @can('discount-groups.view')
+                            <li class="menu-item {{ request()->routeIs('tenant.discount-groups.*') ? 'active' : '' }}">
+                                <a href="{{ route('tenant.discount-groups.index') }}" class="menu-link">
+                                    <i class="menu-icon icon-base ti tabler-ticket"></i>
+                                    <div>{{ __('menu.discount_groups') }}</div>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+            @endif
             @can('members.view')
                 <li class="menu-item {{ request()->routeIs('tenant.members.*') ? 'active' : '' }}">
                     <a href="{{ route('tenant.members.index') }}" class="menu-link">
