@@ -1,22 +1,21 @@
 /**
  * Discount Groups — tenant-side DataTable + CRUD modal
- * Fully independent JS file (Matches POS pattern - no inline blade script parameters needed)
+ * Handles only Discount Groups module.
  */
-$(function () {
-    const $table = $('#discount-groups-table');
-    if (!$table.length) return;
 
-    /* ── Configuration & URLs from DOM/Globals ── */
+$(function () {
+    const $groupTable = $('#discount-groups-table');
+    if (!$groupTable.length) return;
+
     const urls = {
-        listing : $table.data('listing-url'),
-        save    : $table.data('save-url'),
-        base    : $table.data('base-url')
+        listing : $groupTable.data('listing-url'),
+        save    : $groupTable.data('save-url'),
+        base    : $groupTable.data('base-url')
     };
 
-    const canUpdate = $table.data('can-update') == 1;
-    const canDelete = $table.data('can-delete') == 1;
+    const canUpdate = $groupTable.data('can-update') == 1;
+    const canDelete = $groupTable.data('can-delete') == 1;
 
-    // Translations fallback
     const T = window.AppTranslations?.discount_groups || {
         percentage: 'Percentage',
         fixed: 'Fixed',
@@ -29,7 +28,6 @@ $(function () {
         delete_failed: 'Could not delete. Please try again.'
     };
 
-    /* ── DOM Elements ── */
     const modalElement = document.getElementById('discount-group-modal');
     const modal        = modalElement ? new bootstrap.Modal(modalElement) : null;
     const form         = document.getElementById('discount-group-form');
@@ -38,7 +36,6 @@ $(function () {
     const minWrap      = document.getElementById('dg-min-limit-wrap');
     const submitBtn    = document.getElementById('dg-submit-btn');
 
-    /* ── Toggle Min Purchase Limit ── */
     function toggleTypeUI() {
         if (typeEl && typeEl.value === 'fixed') {
             minWrap?.classList.remove('d-none');
@@ -50,8 +47,7 @@ $(function () {
         typeEl.addEventListener('change', toggleTypeUI);
     }
 
-    /* ── DataTable ── */
-    const table = $table.DataTable({
+    const table = $groupTable.DataTable({
         processing : true,
         serverSide : true,
         ajax       : { url: urls.listing },
@@ -99,7 +95,6 @@ $(function () {
         ],
     });
 
-    /* ── Error helpers ── */
     function clearErrors() {
         if (!form) return;
         form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
@@ -116,7 +111,6 @@ $(function () {
         });
     }
 
-    /* ── Add ── */
     document.getElementById('btn-add-group')?.addEventListener('click', () => {
         if (!form) return;
         clearErrors();
@@ -132,8 +126,7 @@ $(function () {
         modal?.show();
     });
 
-    /* ── Edit ── */
-    $table.on('click', '.edit-group', function () {
+    $groupTable.on('click', '.edit-group', function () {
         const id = this.dataset.id;
         clearErrors();
 
@@ -155,7 +148,6 @@ $(function () {
             .catch(() => notyf.error(T.load_failed));
     });
 
-    /* ── Form Submit ── */
     if (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -186,8 +178,7 @@ $(function () {
         });
     }
 
-    /* ── Delete ── */
-    $table.on('click', '.delete-group', function () {
+    $groupTable.on('click', '.delete-group', function () {
         const id = this.dataset.id;
 
         Swal.fire({

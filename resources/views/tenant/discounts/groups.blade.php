@@ -104,5 +104,5 @@
         window.AppTranslations = window.AppTranslations || {};
         window.AppTranslations.discount_groups = @json(__('discount_groups'));
     </script>
-    <script src="{{ asset('organization/js/tenant/discount-groups.js') }}"></script>
+    <script src="{{ asset('organization/js/tenant/discounts.js') }}"></script>
 @endpush
