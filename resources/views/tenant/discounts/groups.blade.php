@@ -54,8 +54,10 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">{{ __('discount_groups.discount_type') }}</label>
-                                <select class="form-select" id="dg-type" name="type" required>
-                                    <option value="" selected disabled>{{ __('discount_groups.select_type') }}</option>
+                                <select class="form-select select2" id="dg-type" name="type"
+                                    data-placeholder="{{ __('discount_groups.select_type') }}"
+                                    data-dropdown-parent="#discount-group-modal">
+                                    <option value=""></option>
                                     <option value="percentage">{{ __('discount_groups.percentage') }}</option>
                                     <option value="fixed">{{ __('discount_groups.fixed') }}</option>
                                 </select>
@@ -63,12 +65,12 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">{{ __('discount_groups.discount_value') }}</label>
-                                <input class="form-control" id="dg-value" name="value" type="number" min="0" step="0.01" required>
+                                <input class="form-control" id="dg-value" name="value" type="number" min="0" step="0.01" placeholder="{{ __('discount_groups.select_discount_value') }}" required>
                                 <div class="invalid-feedback" data-field="value"></div>
                             </div>
                             <div class="col-md-6 d-none" id="dg-min-limit-wrap">
                                 <label class="form-label">{{ __('discount_groups.min_purchase_limit') }}</label>
-                                <input class="form-control" id="dg-min-limit" name="min_limit" type="number" min="0" step="0.01">
+                                <input class="form-control" id="dg-min-limit" name="min_limit" type="number" min="0" step="0.01" placeholder="{{ __('discount_groups.select_min_limit') }}">
                                 <div class="invalid-feedback" data-field="min_limit"></div>
                             </div>
                             <div class="col-md-12">
@@ -104,5 +106,5 @@
         window.AppTranslations = window.AppTranslations || {};
         window.AppTranslations.discount_groups = @json(__('discount_groups'));
     </script>
-    <script src="{{ asset('organization/js/tenant/discounts.js') }}"></script>
+    <script src="{{ asset('organization/js/tenant/discounts.js') }}?v={{ filemtime(public_path('organization/js/tenant/discounts.js')) }}"></script>
 @endpush

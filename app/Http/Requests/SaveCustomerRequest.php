@@ -49,6 +49,11 @@ class SaveCustomerRequest extends FormRequest
                     ->where('organization_id', $orgId)
                     ->ignore($id),
             ],
+            'discount_group_id' => [
+                'nullable', 'integer',
+                Rule::exists('discount_groups', 'id')
+                    ->where('organization_id', $orgId)
+            ],
             'is_active' => ['boolean'],
             // Password is only needed if the customer will use the app; optional always.
             'password' => ['nullable', 'confirmed', Password::defaults()],
@@ -76,6 +81,7 @@ class SaveCustomerRequest extends FormRequest
             'credit_value' => __('customers.credit_value'),
             'notes' => __('customers.notes'),
             'email' => __('customers.email'),
+            'discount_group_id' => __('customers.discount_group'),
             'is_active' => __('customers.status'),
             'password' => __('customers.app_password'),
         ];
@@ -90,10 +96,11 @@ class SaveCustomerRequest extends FormRequest
     {
         return $this->only([
             'name', 'phone', 'address', 'type', 'credit_type',
-            'credit_value', 'notes', 'email', 'is_active', 'password',
+            'credit_value', 'discount_group_id', 'notes', 'email', 'is_active', 'password',
         ]) + [
             'is_active' => $this->boolean('is_active'),
             'credit_value' => (float) ($this->input('credit_value') ?? 0),
+            'discount_group_id' => $this->filled('discount_group_id') ? (int) $this->input('discount_group_id') : null,
         ];
     }
 }

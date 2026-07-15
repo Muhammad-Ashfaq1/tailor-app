@@ -18,6 +18,7 @@ return [
     'type' => 'Type',
     'email' => 'Email',
     'email_hint' => '(optional — for app login)',
+    'discount_group' => 'Discount Group',
     'credit' => 'Credit',
     'credit_reward' => 'Credit reward',
     'credit_type' => 'Credit reward',
@@ -37,6 +38,7 @@ return [
     'ph_name' => 'e.g. Ahmed Ali',
     'ph_phone' => '05XXXXXXXX',
     'ph_email' => 'name@example.com',
+    'ph_discount_group' => 'Select a discount group',
 
     'empty' => 'No customers yet.',
 

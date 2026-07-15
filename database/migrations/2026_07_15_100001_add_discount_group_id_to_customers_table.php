@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('customers', function (Blueprint $table) {
+            $table->foreignId('discount_group_id')
+                ->nullable()
+                ->after('credit_value')
+                ->constrained('discount_groups')
+                ->nullOnDelete();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropForeign(['discount_group_id']);
+            $table->dropColumn('discount_group_id');
+        });
+    }
+};

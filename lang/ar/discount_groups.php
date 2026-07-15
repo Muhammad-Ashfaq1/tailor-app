@@ -22,6 +22,8 @@ return [
     'min_purchase_limit' => 'الحد الأدنى للشراء',
     'is_active' => 'نشط',
     'select_type' => 'اختر نوع الخصم',
+    'select_discount_value' => 'أدخل قيمة الخصم.',
+    'select_min_limit' => 'أدخل الحد الأدنى للشراء',
     'percentage' => 'نسبة مئوية',
     'fixed' => 'مبلغ ثابت',
     

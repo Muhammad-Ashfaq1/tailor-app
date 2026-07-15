@@ -22,6 +22,8 @@ return [
     'min_purchase_limit' => 'Min Purchase Limit',
     'is_active' => 'Is Active',
     'select_type' => 'Select Discount Type',
+    'select_discount_value' => 'Select Discount Value.',
+    'select_min_limit' => 'Select Min Purchase Limit',
     'percentage' => 'Percentage',
     'fixed' => 'Fixed',
     

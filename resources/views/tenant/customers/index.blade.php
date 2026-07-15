@@ -32,12 +32,21 @@
                         <x-form.input name="phone" id="customer-phone" :label="__('customers.phone')" :placeholder="__('customers.ph_phone')" wrapper="col-md-6 mb-3" />
                     </div>
                     <div class="row">
-                        <x-form.select name="type" id="customer-type" :label="__('customers.type')" wrapper="col-md-6 mb-3">
+                        <x-form.select name="type" id="customer-type" :label="__('customers.type')" wrapper="col-md-4 mb-3">
                             @foreach ($types as $type)
                                 <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
                             @endforeach
                         </x-form.select>
-                        <x-form.input name="email" id="customer-email" type="email" :label="__('customers.email')" :placeholder="__('customers.ph_email')" wrapper="col-md-6 mb-3">
+                        <x-form.select name="discount_group_id" id="customer-discount-group" label="{{ __('customers.discount_group') }}" wrapper="col-md-4 mb-3"
+                            class="select2"
+                            data-placeholder="{{ __('customers.ph_discount_group') }}"
+                            data-dropdown-parent="#customer-modal">
+                            <option value=""></option>
+                            @foreach ($discountGroups as $dg)
+                                <option value="{{ $dg->id }}">{{ $dg->name }}</option>
+                            @endforeach
+                        </x-form.select>
+                        <x-form.input name="email" id="customer-email" type="email" :label="__('customers.email')" :placeholder="__('customers.ph_email')" wrapper="col-md-4 mb-3">
                             <x-slot:hint><small class="text-muted">{{ __('customers.email_hint') }}</small></x-slot:hint>
                         </x-form.input>
                     </div>
@@ -94,6 +103,24 @@
     const modal = new bootstrap.Modal(document.getElementById('customer-modal'));
     const form = document.getElementById('customer-form');
 
+    // Select2 — same pattern as POS
+    if (typeof $.fn.select2 === 'function') {
+        $('.select2').each(function () {
+            const $this = $(this);
+            if ($this.data('select2')) return;
+            const dropdownParentSelector = $this.data('dropdown-parent');
+            if (!dropdownParentSelector && !$this.parent().hasClass('position-relative')) {
+                $this.wrap('<div class="position-relative"></div>');
+            }
+            $this.select2({
+                dropdownParent: dropdownParentSelector ? $(dropdownParentSelector) : $this.parent(),
+                placeholder: $this.data('placeholder'),
+                allowClear: Boolean($this.data('allow-clear')),
+                minimumResultsForSearch: $this.data('minimum-results-for-search') ?? 0,
+            });
+        });
+    }
+
     const creditCell = (row) => {
         if (row.credit_type === 'percentage') return `${Number(row.credit_value)}%`;
         if (row.credit_type === 'fixed') return window.formatMoney(row.credit_value);
@@ -127,6 +154,7 @@
     document.getElementById('btn-new-customer')?.addEventListener('click', () => {
         clearErrors(); form.reset();
         document.getElementById('customer-id').value = '';
+        $('#customer-discount-group').val('').trigger('change');
         document.getElementById('customer-active').checked = true;
         document.getElementById('customer-modal-title').textContent = T.new;
         updateCreditHint();
@@ -142,6 +170,7 @@
             document.getElementById('customer-phone').value = data.phone || '';
             document.getElementById('customer-email').value = data.email || '';
             document.getElementById('customer-type').value = data.type;
+            $('#customer-discount-group').val(data.discount_group_id || '').trigger('change');
             document.getElementById('customer-credit-type').value = data.credit_type;
             document.getElementById('customer-credit-value').value = data.credit_value ?? 0;
             document.getElementById('customer-address').value = data.address || '';

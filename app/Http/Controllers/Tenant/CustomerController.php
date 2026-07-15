@@ -8,6 +8,7 @@ use App\Enums\CustomerCreditType;
 use App\Enums\CustomerType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveCustomerRequest;
+use App\Models\DiscountGroup;
 use App\Repositories\Interface\CustomerRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +30,7 @@ final readonly class CustomerController extends Controller
         return view('tenant.customers.index', [
             'types' => CustomerType::options(),
             'creditTypes' => CustomerCreditType::options(),
+            'discountGroups' => DiscountGroup::query()->where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
@@ -50,6 +52,7 @@ final readonly class CustomerController extends Controller
             'type' => $customer->type->value,
             'credit_type' => $customer->credit_type->value,
             'credit_value' => $customer->credit_value,
+            'discount_group_id' => $customer->discount_group_id,
             'notes' => $customer->notes,
             'email' => $customer->email,
             'is_active' => $customer->is_active,
