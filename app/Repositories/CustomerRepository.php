@@ -14,7 +14,7 @@ final class CustomerRepository extends BaseRepository implements CustomerReposit
     public function datatable(Request $request): array
     {
         // Org scope is automatic via BelongsToOrganization.
-        $query = Customer::query();
+        $query = Customer::query()->with('discountGroup');
 
         return DataTableBuilder::for($query, $request)
             ->searchable(['name', 'phone', 'email'])
@@ -30,6 +30,8 @@ final class CustomerRepository extends BaseRepository implements CustomerReposit
                 'credit_type' => $customer->credit_type->value,
                 'credit_type_label' => $customer->credit_type->label(),
                 'credit_value' => $customer->credit_value,
+                'discount_group_id' => $customer->discount_group_id,
+                'discount_group_name' => $customer->discountGroup?->name,
                 'is_active' => $customer->is_active,
                 'created_at' => $customer->created_at?->toDateString(),
             ])
@@ -38,7 +40,7 @@ final class CustomerRepository extends BaseRepository implements CustomerReposit
 
     public function find(int $id): ?Customer
     {
-        return Customer::query()->find($id);
+        return Customer::query()->with('discountGroup')->find($id);
     }
 
     public function save(array $data, ?int $id = null): Customer

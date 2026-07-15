@@ -48,6 +48,7 @@ class Customer extends Authenticatable
         'type',
         'credit_type',
         'credit_value',
+        'discount_group_id',
         'notes',
         'email',
         'password',
@@ -69,7 +70,13 @@ class Customer extends Authenticatable
             'type' => CustomerType::class,
             'credit_type' => CustomerCreditType::class,
             'credit_value' => 'decimal:2',
+            'discount_group_id' => 'integer',
         ];
+    }
+
+    public function discountGroup(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(DiscountGroup::class);
     }
 
     protected static function newFactory(): CustomerFactory

@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="{{ asset('organization/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
 {{-- Notyf toast notifications (global — used via window.notyf). --}}
 <link rel="stylesheet" href="{{ asset('organization/vendor/libs/notyf/notyf.css') }}">
+{{-- Select2 — global dropdown enhancement (used across multiple pages). --}}
+<link rel="stylesheet" href="{{ asset('organization/vendor/libs/select2/select2.css') }}">
 {{-- Pickr — colour picker used by the theme customizer. --}}
 <link rel="stylesheet" href="{{ asset('organization/vendor/libs/pickr/pickr-themes.css') }}">
 

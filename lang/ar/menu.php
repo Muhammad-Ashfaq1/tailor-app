@@ -19,6 +19,8 @@ return [
     'wallet' => 'المحفظة',
     'employees' => 'الموظفون',
     'expenses' => 'المصروفات',
+    'discounts' => 'الخصومات',
+    'discount_groups' => 'مجموعات الخصم',
 
     // Navbar / user menu
     'profile' => 'الملف الشخصي',

@@ -18,6 +18,7 @@ return [
     'type' => 'النوع',
     'email' => 'البريد الإلكتروني',
     'email_hint' => '(اختياري — للدخول عبر التطبيق)',
+    'discount_group' => 'مجموعة الخصم',
     'credit' => 'الرصيد',
     'credit_reward' => 'مكافأة رصيد',
     'credit_type' => 'مكافأة رصيد',
@@ -37,6 +38,7 @@ return [
     'ph_name' => 'مثال: أحمد علي',
     'ph_phone' => '05XXXXXXXX',
     'ph_email' => 'name@example.com',
+    'ph_discount_group' => 'اختر مجموعة الخصم',
 
     'empty' => 'لا يوجد عملاء بعد.',
 

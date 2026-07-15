@@ -9,6 +9,9 @@
 {{-- Notyf — global toast lib behind window.notyf (see js/app.js). --}}
 <script src="{{ asset('organization/vendor/libs/notyf/notyf.js') }}"></script>
 
+{{-- Select2 — global dropdown enhancement. --}}
+<script src="{{ asset('organization/vendor/libs/select2/select2.js') }}"></script>
+
 @stack('vendor-scripts')
 
 <script src="{{ asset('organization/js/main.js') }}"></script>

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Repositories\CustomerRepository;
+use App\Repositories\DiscountGroupRepository;
 use App\Repositories\Interface\CustomerRepositoryInterface;
+use App\Repositories\Interface\DiscountGroupRepositoryInterface;
 use App\Repositories\Interface\LeadRepositoryInterface;
 use App\Repositories\LeadRepository;
 use Illuminate\Support\Facades\Blade;
@@ -20,8 +22,9 @@ class AppServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     private array $repositories = [
-        LeadRepositoryInterface::class => LeadRepository::class,
-        CustomerRepositoryInterface::class => CustomerRepository::class,
+        LeadRepositoryInterface::class      => LeadRepository::class,
+        CustomerRepositoryInterface::class  => CustomerRepository::class,
+        DiscountGroupRepositoryInterface::class => DiscountGroupRepository::class,
     ];
 
     public function register(): void
